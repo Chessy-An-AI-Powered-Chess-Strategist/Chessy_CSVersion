@@ -20,3 +20,6 @@ class GameState:
             ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ])
+
+        self.white_to_move = True
+        self.move_log = np.array([])
