@@ -8,7 +8,7 @@ class Move:
     cols_to_files = {v: k for k, v in files_to_cols.items()}
 
     def __init__(self, start_sq, end_sq, board) -> None:
-        print(start_sq, end_sq)
+        # print(start_sq, end_sq)
         self.start_row = start_sq[0]
         self.start_col = start_sq[1]
         self.end_row = end_sq[0]
