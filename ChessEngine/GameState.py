@@ -23,3 +23,14 @@ class GameState:
 
         self.white_to_move = True
         self.move_log = np.array([])
+
+    def make_move(self, move):
+        """
+        We are assuming all the moves given to this function are always valid
+        :param move:
+        :return:
+        """
+        self.board[move.start_row][move.start_col] = "--"
+        self.board[move.end_row][move.end_col] = move.piece_moved
+        self.move_log = np.append(self.move_log, move)
+        self.white_to_move = not self.white_to_move
