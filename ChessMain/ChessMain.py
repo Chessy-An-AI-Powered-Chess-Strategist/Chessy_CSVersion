@@ -14,6 +14,10 @@ def main():
     screen.fill(p.Color("white"))
     game_state = GameState()
 
+    # ToDo: Must move this to tree
+    valid_moves = game_state.get_valid_moves()
+    move_made = False  # flag variable for when a move is made
+
     running = True
     sq_selected = ()
     player_clicks = []
@@ -23,6 +27,7 @@ def main():
                 running = False
 
             elif e.type == p.MOUSEBUTTONDOWN:
+                """handle the mouse click event"""
                 # print(len(player_clicks))
                 location = p.mouse.get_pos()  # (x, y) location of mouse
                 col = location[0]//gui_settings["SQ_SIZE"]
@@ -43,11 +48,27 @@ def main():
                     move_object = Move(player_clicks[0], player_clicks[1], game_state.board)
                     # print(move_object)
 
-                    game_state.make_move(move_object)
+                    if move_object in valid_moves:
+                        game_state.make_move(move_object)
+                        move_made = True
 
-                    # reset the player clicks
-                    sq_selected = ()
-                    player_clicks = []
+                        # reset the player clicks
+                        sq_selected = ()
+                        player_clicks = []
+
+                    else:
+                        player_clicks = [sq_selected]
+
+            elif e.type == p.KEYDOWN:
+                """key handler"""
+                if e.key == p.K_z:
+                    game_state.undo_move()
+                    move_made = True  # regenerating the valid moves after undoing a move
+
+        if move_made:
+            """update the valid moves"""
+            valid_moves = game_state.get_valid_moves()
+            move_made = False
 
         draw_game_state(screen, game_state)
         clock.tick(gui_settings["MAX_FPS"])
