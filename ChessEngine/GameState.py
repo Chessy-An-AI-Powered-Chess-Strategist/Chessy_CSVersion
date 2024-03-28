@@ -262,15 +262,12 @@ class GameState:
                 if self.board[row - 1][col - 1][0] == 'b':
                     """There is an enemy piece to capture to the left"""
                     if not is_pin or pin_direction == (-1, -1):
-<<<<<<< Updated upstream
                         moves.append(Move((row, col), (row - 1, col - 1), self.board))
                 elif (row-1, col-1) == self.enpassant_coord:
                     if not is_pin or pin_direction == (-1, -1):
                         moves.append(Move((row, col), (row + 1, col - 1), self.board, enpessant_possbile=True))
 
-=======
                         moves.append(Move((row, col), (row - 1, col - 1), self.board, True))
->>>>>>> Stashed changes
 
             if col + 1 <= 7:
                 if self.board[row - 1][col + 1][0] == 'b':

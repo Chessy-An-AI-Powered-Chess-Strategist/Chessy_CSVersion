@@ -79,7 +79,7 @@ def main():
                     # Check if the player has clicked twice to make a move
                     if len(player_clicks) == 2:
                         move_object = Move(player_clicks[0], player_clicks[1], game_state.board)
-<<<<<<< Updated upstream
+
                         # print(move_object)
                         for i in range(len(valid_moves)):
                             if move_object == valid_moves[i]:
@@ -90,7 +90,7 @@ def main():
                                 player_clicks = []
 
                         if not move_made:
-=======
+                            pass
 
                         if move_object in valid_moves:
                             move_object = [move for move in valid_moves if move.move_id == move_object.move_id][0]
@@ -101,7 +101,6 @@ def main():
                             player_clicks = []
 
                         else:
->>>>>>> Stashed changes
                             player_clicks = [sq_selected]
 
             elif e.type == p.KEYDOWN:
@@ -120,8 +119,9 @@ def main():
 
         # AI move finder logic
         if not game_over and not human_turn:
-            move = engine.find_best_move_tree(game_state, valid_moves)
-            # move = smf.findRandomMove(valid_moves)
+            # move = engine.find_best_move_tree(game_state, valid_moves) # ToDo: change the tree when complete
+            move = smf.findRandomMove(valid_moves)
+            move = smf.minimax_non_recursive(game_state, valid_moves)
             if move is None:
                 move = smf.findRandomMove(valid_moves)
             game_state.make_move(move)

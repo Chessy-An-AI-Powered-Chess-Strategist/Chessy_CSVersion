@@ -22,11 +22,7 @@ class Move:
                      "e": 4, "f": 5, "g": 6, "h": 7}
     cols_to_files = {v: k for k, v in files_to_cols.items()}
 
-<<<<<<< Updated upstream
-    def __init__(self, start_sq, end_sq, board, enpessant_possbile = False) -> None:
-=======
-    def __init__(self, start_sq, end_sq, board, is_capture: bool = False) -> None:
->>>>>>> Stashed changes
+    def __init__(self, start_sq, end_sq, board, is_capture: bool = False, enpessant_possbile = False) -> None:
         """
         A constructor that initializes a new Move object
         """
