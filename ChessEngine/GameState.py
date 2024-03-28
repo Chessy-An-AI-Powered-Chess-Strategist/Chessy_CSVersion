@@ -35,6 +35,10 @@ class GameState:
         self.white_to_move = True
         self.move_log = []
 
+        # game state variables
+        self.is_checkmate = False
+        self.is_stalemate = False
+
         # Track teh kings to make checking easier
         self.white_king_location = (7, 4)
         self.black_king_location = (0, 4)
@@ -80,59 +84,6 @@ class GameState:
             print(
                 f"Move undone: {last_move.piece_moved} from {(last_move.start_row, last_move.start_col)} to {(last_move.end_row, last_move.end_col)}")
 
-    def get_valid_moves_try2(self):
-        """
-        All moves that are valid considering checks
-
-        1. Get all possible moves
-        2. For each move, make the move
-        3. Generate all the opponent's moves
-        4. Check if any of the opponent's moves attack the king
-        5. If the king is attacked, the move is invalid
-        :return:
-        """
-        moves = []
-        self._check_for_pins_and_checks()
-        self.in_check, self.pins, self.checks = self.check_for_pins_and_checks
-
-        if self.white_to_move:
-            king_row, king_col = self.white_king_location
-        else:
-            king_row, king_col = self.black_king_location
-
-        # print(f"Getting valid moves for {'white' if self.white_to_move else 'black'}")
-
-        if self.in_check:
-            if len(self.checks) == 1:  # only 1 check, block the check or move the king
-                check = self.checks[0]
-                check_row, check_col = check[0], check[1]
-                piece_checking = self.board[check_row][check_col]
-                valid_squares = []  # squares that pieces can move to
-                if piece_checking[1] == 'N':
-                    valid_squares = [(check_row, check_col)]
-
-                else:
-                    for i in range(1, 8):
-                        valid_square = (king_row + check[2] * i, king_col + check[3] * i)
-                        valid_squares.append(valid_square)
-                        if valid_square[0] == check_row and valid_square[1] == check_col:
-                            break
-
-                # get rid of any moves that don't block the check or move the king
-                # for i in range(len(self.pins) - 1, -1, -1):
-                #     if self.pins[i][0] != check[0] and self.pins[i][1] != check[1]:
-                #         del self.pins[i]
-                moves = valid_squares
-
-            else:  # double check, king has to move
-                self.get_king_moves(king_row, king_col, moves)
-
-        else:
-            moves = self.get_all_possible_moves()
-
-        print(f"Valid moves:", [str(move) for move in moves])
-        return moves  # ToDo: Implement this method
-
     def get_valid_moves(self):
         moves = []
         self._check_for_pins_and_checks()
@@ -173,6 +124,14 @@ class GameState:
             moves = self.get_all_possible_moves()
 
         print(f"Valid moves:", [str(move) for move in moves])
+
+        if len(moves) == 0:
+            if self.in_check:
+                self.is_checkmate = True
+                print("Checkmate")
+            else:
+                self.is_stalemate = True
+                print("Stalemate")
 
         return moves
 

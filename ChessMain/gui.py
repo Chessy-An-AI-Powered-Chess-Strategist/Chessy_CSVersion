@@ -21,9 +21,8 @@ def load_images():
     for i in range(len(pieces)):
         index = "0" + str(i + 1) if i < 9 else str(i + 1)
         image = p.image.load("images/64_" + index + ".png")
-        size = (gui_settings["SQ_SIZE"], gui_settings["SQ_SIZE"])
+        size = (gui_settings["SQ_SIZE"] - 2, gui_settings["SQ_SIZE"] - 2)
         gui_settings["IMAGES"][pieces[i]] = p.transform.scale(image, size)
-
 
 
 load_images()
