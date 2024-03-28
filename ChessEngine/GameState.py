@@ -55,6 +55,7 @@ class GameState:
         # game state variables
         self.is_checkmate = False
         self.is_stalemate = False
+        self.enpassant_coord = ()  # coordinates for enpessant square
 
         # Track teh kings to make checking easier
         self.white_king_location = (7, 4)
@@ -83,6 +84,9 @@ class GameState:
             self.white_king_location = (move.end_row, move.end_col)
         elif move.piece_moved == 'bK':
             self.black_king_location = (move.end_row, move.end_col)
+
+        if move.is_pawn_promotion:
+            self.board[move.end_row][move.end_col] = move.piece_moved[0] + 'Q'
 
         print(
             f"Move made: {move.piece_moved} from {(move.start_row, move.start_col)} to {(move.end_row, move.end_col)}")
@@ -256,6 +260,14 @@ class GameState:
                     """There is an enemy piece to capture to the left"""
                     if not is_pin or pin_direction == (-1, -1):
                         moves.append(Move((row, col), (row - 1, col - 1), self.board))
+                elif (row-1, col-1) == self.enpassant_coord:
+                    if not is_pin or pin_direction == (-1, -1):
+                        moves.append(Move((row, col), (row + 1, col - 1), self.board, enpessant_possbile=True))
+
+
+
+
+
 
             if col + 1 <= 7:
                 if self.board[row - 1][col + 1][0] == 'b':

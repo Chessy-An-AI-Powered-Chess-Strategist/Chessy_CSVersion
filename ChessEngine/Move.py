@@ -22,7 +22,7 @@ class Move:
                      "e": 4, "f": 5, "g": 6, "h": 7}
     cols_to_files = {v: k for k, v in files_to_cols.items()}
 
-    def __init__(self, start_sq, end_sq, board) -> None:
+    def __init__(self, start_sq, end_sq, board, enpessant_possbile = False) -> None:
         """
         A constructor that initializes a new Move object
         """
@@ -39,10 +39,11 @@ class Move:
         # check for pawn promotion
         self.is_pawn_promotion = False
 
+        # check for enpessant move
+        self.is_enpessant_move = enpessant_possbile
+
         if self.piece_moved == 'wp' and self.end_row == 0 or self.piece_moved == 'bp' and self.end_row == 7:
             self.is_pawn_promotion = True
-
-
 
         # create a move id (4 digits)
         self.move_id = self.start_row * 1000 + self.start_col * 100 + self.end_row * 10 + self.end_col
