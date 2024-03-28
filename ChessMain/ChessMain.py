@@ -1,3 +1,4 @@
+# importing required packages
 import numpy as np
 import pygame as p
 from ChessEngine.GameState import GameState
@@ -9,6 +10,19 @@ p.init()
 
 
 def main():
+    """
+    A function that serves as the brain of the Chess Game. It displays the board and pieces and contains a while loop.
+    This function initializes the game state, handles player input, updates the game state based on player actions,
+    and draws the game state on the screen. The game loop runs until the player quits the game or closes the window.
+    The player can make moves by clicking on squares on the board, undo moves using the 'z' key, and view valid moves
+    by highlighting pieces on the board.
+
+    Instance Atrributes:
+
+    screen:
+
+
+    """
     screen = p.display.set_mode((gui_settings["WIDTH"], gui_settings["HEIGHT"]))
     clock = p.time.Clock()
     screen.fill(p.Color("white"))

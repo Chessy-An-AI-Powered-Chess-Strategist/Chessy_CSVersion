@@ -1,13 +1,29 @@
+# importing required packages
 import numpy as np
 from typing import Optional
 from ChessEngine.Move import Move
 
 
 class GameState:
+    """
+    A Representation of the state of a chess game.
+
+    Instance Attributes:
+        - board (np.ndarray): A 2D numpy array representing the chess board.
+        - move_log (list[Move]): A list of Move objects representing the moves made in the game.
+
+    Representation Invariants:
+        - len(self.board) == 8
+        - all(len(self.board[row]) == 8 for row in self.board)
+        - 0 <= len(self.move_log) <= 2
+    """
     board: np.ndarray
     move_log: list[Move]
 
     def __init__(self):
+        """
+        Constructor that initializes a new GameState Object
+        """
         # Board is an 8x8 2d list, each element of the list has 2 characters.
         # The first character represents the color of the piece, 'b' or 'w'
         # The second character represents the type of the piece, 'K', 'Q', 'R', 'B', 'N', 'P'
@@ -52,11 +68,9 @@ class GameState:
 
     def make_move(self, move):
         """
-        We are assuming all the moves given to this function are always valid
-
-        Will not work with castle, en-passant, pawn promotion
-        :param move:
-        :return:
+        A function that takes in a move object and makes a move on a chessboard.
+        (We are assuming all the moves given to this function are always valid)
+        (Will not work with castle, en-passant, pawn promotion)
         """
         self.board[move.start_row][move.start_col] = "--"
         self.board[move.end_row][move.end_col] = move.piece_moved
@@ -73,6 +87,9 @@ class GameState:
             f"Move made: {move.piece_moved} from {(move.start_row, move.start_col)} to {(move.end_row, move.end_col)}")
 
     def undo_move(self):
+        """
+        A function that undoes the most recent move made
+        """
         if len(self.move_log) != 0:
             # if the move_log is not empty, then we can undo the last move
             last_move = self.move_log[-1]
@@ -84,7 +101,67 @@ class GameState:
             print(
                 f"Move undone: {last_move.piece_moved} from {(last_move.start_row, last_move.start_col)} to {(last_move.end_row, last_move.end_col)}")
 
+<<<<<<< Updated upstream
+=======
+    def get_valid_moves_try2(self):
+        """
+        A function that obtains all valid moves on a chessboard that have to do with checks.
+        The function works as follows:
+
+        1. Get all possible moves
+        2. For each move, make the move
+        3. Generate all the opponent's moves
+        4. Check if any of the opponent's moves attack the king
+        5. If the king is attacked, the move is invalid
+
+        """
+        moves = []
+        self._check_for_pins_and_checks()
+        self.in_check, self.pins, self.checks = self.check_for_pins_and_checks
+
+        if self.white_to_move:
+            king_row, king_col = self.white_king_location
+        else:
+            king_row, king_col = self.black_king_location
+
+        # print(f"Getting valid moves for {'white' if self.white_to_move else 'black'}")
+
+        if self.in_check:
+            if len(self.checks) == 1:  # only 1 check, block the check or move the king
+                check = self.checks[0]
+                check_row, check_col = check[0], check[1]
+                piece_checking = self.board[check_row][check_col]
+                valid_squares = []  # squares that pieces can move to
+                if piece_checking[1] == 'N':
+                    valid_squares = [(check_row, check_col)]
+
+                else:
+                    for i in range(1, 8):
+                        valid_square = (king_row + check[2] * i, king_col + check[3] * i)
+                        valid_squares.append(valid_square)
+                        if valid_square[0] == check_row and valid_square[1] == check_col:
+                            break
+
+                # get rid of any moves that don't block the check or move the king
+                # for i in range(len(self.pins) - 1, -1, -1):
+                #     if self.pins[i][0] != check[0] and self.pins[i][1] != check[1]:
+                #         del self.pins[i]
+                moves = valid_squares
+
+            else:  # double check, king has to move
+                self.get_king_moves(king_row, king_col, moves)
+
+        else:
+            moves = self.get_all_possible_moves()
+
+        print(f"Valid moves:", [str(move) for move in moves])
+        return moves  # ToDo: Implement this method
+
+>>>>>>> Stashed changes
     def get_valid_moves(self):
+        """
+        A function that returns a list of all the valid moves that can be made at the current game state
+        """
         moves = []
         self._check_for_pins_and_checks()
         self.in_check, self.pins, self.checks = self.check_for_pins_and_checks
@@ -137,8 +214,7 @@ class GameState:
 
     def get_all_possible_moves(self):
         """
-        All moves without considering checks
-        :return:
+        A function that returns a list of all possible moves other than checks
         """
         moves = []
         for row in range(len(self.board)):
@@ -151,6 +227,10 @@ class GameState:
         return moves
 
     def get_pawn_moves(self, row, col, moves) -> None:
+        """
+        A function that determines all possible moves to be made at the current game state
+        by all pawns on the board for a given player (white or black) and appends it to self.moves.
+        """
         # check for pins
         is_pin = False
         pin_direction = ()
@@ -212,6 +292,10 @@ class GameState:
         # ToDo: Add pawn promotion
 
     def get_rook_moves(self, row, col, moves) -> None:
+        """
+        A function that determines all possible moves to be made at the current game state
+        by all rooks on the board for a given player (white or black) and appends it to self.moves.
+        """
         is_pin = False
         pin_direction = ()
         for i in range(len(self.pins) - 1, -1, -1):
@@ -247,7 +331,10 @@ class GameState:
                             break
 
     def get_knight_moves(self, row, col, moves):
-
+        """
+        A function that determines all possible moves to be made at the current game state
+        by all knights on the board for a given player (white or black) and appends it to self.moves.
+        """
         is_pin = False
         for i in range(len(self.pins) - 1, -1, -1):
             if self.pins[i][0] == row and self.pins[i][1] == col:
@@ -272,6 +359,10 @@ class GameState:
                         moves.append(Move((row, col), (end_row, end_col), self.board))
 
     def get_bishop_moves(self, row, col, moves):
+        """
+        A function that determines all possible moves to be made at the current game state
+        by all bishops on the board for a given player (white or black) and appends it to self.moves.
+        """
         is_pin = False
         pin_direction = ()
         for i in range(len(self.pins) - 1, -1, -1):
@@ -306,11 +397,19 @@ class GameState:
                             break
 
     def get_queen_moves(self, row, col, moves):
+        """
+        A function that determines all possible moves to be made at the current game state
+        by a queen on the board for a given player (white or black) and appends it to self.moves.
+        """
         # The queen can move like a rook or a bishop
         self.get_rook_moves(row, col, moves)
         self.get_bishop_moves(row, col, moves)
 
     def get_king_moves(self, row, col, moves):
+        """
+        A function that determines all possible moves to be made at the current game state
+        by a king on the board for a given player (white or black) and appends it to self.moves.
+        """
         print("Getting king moves.......")
         row_moves = (-1, -1, -1, 0, 0, 1, 1, 1)
         col_moves = (-1, 0, 1, -1, 1, -1, 0, 1)
@@ -359,6 +458,10 @@ class GameState:
         #             moves.append(Move((row, col), (end_row, end_col), self.board))
 
     def _check_for_pins_and_checks(self, save_to_cache: Optional[bool] = True):
+        """
+        A function that determines all pins and checks in the current gamestate by checking which peaces
+        are attacking the king in each direction and checking if the king is in check
+        """
         pins, checks, in_check = [], [], False
         king_row, king_col = self.white_king_location if self.white_to_move else self.black_king_location
 

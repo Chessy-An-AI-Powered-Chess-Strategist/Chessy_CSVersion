@@ -15,7 +15,7 @@ gui_settings = {
 
 def load_images():
     """
-    Initialize a global dictionary of the images
+    A function that initializes a global dictionary of the images
     """
     pieces = ["bR", "bN", "bB", "bQ", "bK", "bp", "wR", "wN", "wB", "wQ", "wK", "wp"]
     for i in range(len(pieces)):
