@@ -80,7 +80,7 @@ class GameState:
             print(
                 f"Move undone: {last_move.piece_moved} from {(last_move.start_row, last_move.start_col)} to {(last_move.end_row, last_move.end_col)}")
 
-    def get_valid_moves(self):
+    def get_valid_moves_try2(self):
         """
         All moves that are valid considering checks
 
@@ -119,9 +119,10 @@ class GameState:
                             break
 
                 # get rid of any moves that don't block the check or move the king
-                for i in range(len(self.pins) - 1, -1, -1):
-                    if self.pins[i][0] != check[0] and self.pins[i][1] != check[1]:
-                        self.pins.remove(self.pins[i])
+                # for i in range(len(self.pins) - 1, -1, -1):
+                #     if self.pins[i][0] != check[0] and self.pins[i][1] != check[1]:
+                #         del self.pins[i]
+                moves = valid_squares
 
             else:  # double check, king has to move
                 self.get_king_moves(king_row, king_col, moves)
@@ -129,8 +130,51 @@ class GameState:
         else:
             moves = self.get_all_possible_moves()
 
-        # print(f"Valid moves: {moves}")
-        return self.get_all_possible_moves()  # ToDo: Implement this method
+        print(f"Valid moves:", [str(move) for move in moves])
+        return moves  # ToDo: Implement this method
+
+    def get_valid_moves(self):
+        moves = []
+        self._check_for_pins_and_checks()
+        self.in_check, self.pins, self.checks = self.check_for_pins_and_checks
+
+        king_row, king_col = self.white_king_location if self.white_to_move else self.black_king_location
+
+        if self.in_check:
+            if len(self.checks) == 1:  # only 1 check, block the check or move the king
+                moves = self.get_all_possible_moves()
+
+                check = self.checks[0]
+                check_row, check_col = check[0], check[1]
+                piece_checking = self.board[check_row][check_col]
+
+                valid_squares = []  # squares that pieces can move to
+
+                if piece_checking[1] == 'N':
+                    valid_squares = [(check_row, check_col)]
+                else:
+                    for i in range(1, 8):
+                        valid_square = (king_row + check[2] * i, king_col + check[3] * i)
+                        valid_squares.append(valid_square)
+                        if valid_square[0] == check_row and valid_square[1] == check_col:  # capture the piece
+                            break
+
+                print(f"Valid moves:", [str(move) for move in moves])
+
+                # get rid of any moves that don't block the check or move the king
+                for i in range(len(moves) - 1, -1, -1):
+                    if moves[i].piece_moved[1] != 'K':  # move king to get out of check
+                        if not (moves[i].end_row, moves[i].end_col) in valid_squares:
+                            moves.remove(moves[i])
+
+            else:  # double check, king has to move
+                self.get_king_moves(king_row, king_col, moves)
+        else:
+            moves = self.get_all_possible_moves()
+
+        print(f"Valid moves:", [str(move) for move in moves])
+
+        return moves
 
     def get_all_possible_moves(self):
         """
@@ -308,6 +352,7 @@ class GameState:
         self.get_bishop_moves(row, col, moves)
 
     def get_king_moves(self, row, col, moves):
+        print("Getting king moves.......")
         row_moves = (-1, -1, -1, 0, 0, 1, 1, 1)
         col_moves = (-1, 0, 1, -1, 1, -1, 0, 1)
         ally_color = "w" if self.white_to_move else "b"
@@ -323,12 +368,15 @@ class GameState:
                     # Place the king on the end square and check for checks
                     if ally_color == "w":
                         self.white_king_location = (end_row, end_col)
+                        print("New white king location", self.white_king_location)
                     else:
                         self.black_king_location = (end_row, end_col)
 
-                    in_check, pins, checks = self.check_for_pins_and_checks
+                    in_check, pins, checks = self._check_for_pins_and_checks(save_to_cache=False)
+                    print("Checking for pins and checks", in_check, pins, checks)
 
                     if not in_check:
+                        print(str(Move((row, col), (end_row, end_col), self.board)))
                         moves.append(Move((row, col), (end_row, end_col), self.board))
 
                     if ally_color == "w":
@@ -351,82 +399,7 @@ class GameState:
         #             # Capture the piece
         #             moves.append(Move((row, col), (end_row, end_col), self.board))
 
-    def check_for_pins_and_checks_try3(self):
-        pins = []
-        checks = []
-        in_check = False
-
-        if self.white_to_move:
-            enemy_color, ally_color = "b", "w"
-            king_row, king_col = self.white_king_location
-        else:
-            enemy_color, ally_color = "w", "b"
-            king_row, king_col = self.black_king_location
-        print("---------------------------------------")
-        print(enemy_color, ally_color, king_row, king_col)
-
-        directions = ((-1, 0), (0, -1), (1, 0), (0, 1), (-1, -1), (1, -1), (-1, 1), (1, 1))
-
-        for j in range(len(directions)):
-            d = directions[j]
-            possible_pin = ()
-            for i in range(1, 8):
-                end_row = king_row + d[0] * i
-                end_col = king_col + d[1] * i
-
-                print(end_row, end_col)
-                if 0 <= end_row < 8 and 0 <= end_col < 8:
-                    end_piece = self.board[end_row][end_col]
-                    print(end_piece)
-
-                    if end_piece[0] == ally_color and end_piece[1] != 'K':
-                        if possible_pin == ():
-                            possible_pin = (end_row, end_col, d[0], d[1])
-                        else:
-                            break
-
-                    elif end_piece[0] != "--":
-                        piece = end_piece[1]
-                        """
-                        if the piece is a rook or a queen and is pinning the king
-                        
-                        
-                        """
-                        if (0 <= j <= 3 and piece == 'R') or (4 <= j <= 7 and piece == 'B') or (
-                                i == 1 and piece == 'p' and (
-                                (enemy_color == "w" and 6 <= j <= 7) or (enemy_color == "b" and 4 <= j <= 5))) or (
-                                piece == 'Q') or (i == 1 and piece == 'K'):
-
-                            if possible_pin == ():
-                                in_check = True
-                                checks.append((end_row, end_col, d[0], d[1]))
-                                break
-                            else:
-                                pins.append(possible_pin)
-                                break
-                        else:
-                            break
-                else:
-                    break
-
-            # Check for knights
-            knight_moves = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
-            for m in knight_moves:
-                end_row = king_row + m[0]
-                end_col = king_col + m[1]
-
-                if 0 <= end_row < 8 and 0 <= end_col < 8:
-                    end_piece = self.board[end_row][end_col]
-
-                    if end_piece[0] == enemy_color and end_piece[1] == 'N':
-                        in_check = True
-                        checks.append((end_row, end_col, m[0], m[1]))
-
-            print(in_check, pins, checks)
-
-            return in_check, pins, checks
-
-    def _check_for_pins_and_checks(self):
+    def _check_for_pins_and_checks(self, save_to_cache: Optional[bool] = True):
         pins, checks, in_check = [], [], False
         king_row, king_col = self.white_king_location if self.white_to_move else self.black_king_location
 
@@ -492,11 +465,15 @@ class GameState:
 
             if 0 <= end_row < 8 and 0 <= end_col < 8:
                 end_piece = self.board[end_row][end_col]
+                print("end_piece", end_piece)
 
-                if end_piece[0] == ("w" if self.white_to_move else "b") and end_piece[1] == 'N':
+                if end_piece[0] == ("w" if not self.white_to_move else "b") and end_piece[1] == 'N':
                     in_check = True
                     checks.append((end_row, end_col, m[0], m[1]))
 
         print("Returning as", "w" if self.white_to_move else "b", in_check, pins, checks)
 
-        self.check_for_pins_and_checks = in_check, pins, checks
+        if save_to_cache:
+            self.check_for_pins_and_checks = in_check, pins, checks
+
+        return in_check, pins, checks
