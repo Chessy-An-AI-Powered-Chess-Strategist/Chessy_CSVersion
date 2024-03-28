@@ -265,15 +265,15 @@ class GameState:
                         moves.append(Move((row, col), (row + 1, col - 1), self.board, enpessant_possbile=True))
 
 
-
-
-
-
             if col + 1 <= 7:
                 if self.board[row - 1][col + 1][0] == 'b':
                     """There is an enemy piece to capture to the right"""
                     if not is_pin or pin_direction == (-1, 1):
                         moves.append(Move((row, col), (row - 1, col + 1), self.board))
+
+                elif (row-1, col+1) == self.enpassant_coord:
+                    if not is_pin or pin_direction == (-1, 1):
+                        moves.append(Move((row, col), (row + 1, col + 1), self.board, enpessant_possbile=True))
 
         else:
             """Black pawn moves"""
@@ -293,11 +293,19 @@ class GameState:
                     if not is_pin or pin_direction == (1, -1):
                         moves.append(Move((row, col), (row + 1, col - 1), self.board))
 
+                elif (row + 1, col-1) == self.enpassant_coord:
+                    if not is_pin or pin_direction == (1, -1):
+                        moves.append(Move((row, col), (row + 1, col - 1), self.board, enpessant_possbile=True))
+
             if col + 1 <= 7:
                 if self.board[row + 1][col + 1][0] == 'w':
                     """There is an enemy piece to capture to the right"""
                     if not is_pin or pin_direction == (1, 1):
                         moves.append(Move((row, col), (row + 1, col + 1), self.board))
+
+                elif (row + 1, col+1) == self.enpassant_coord:
+                    if not is_pin or pin_direction == (1, 1):
+                        moves.append(Move((row, col), (row + 1, col + 1), self.board, enpessant_possbile=True))
 
         # ToDo: Add pawn promotion
 
