@@ -2,6 +2,7 @@
 import numpy as np
 from typing import Optional
 from ChessEngine.Move import Move
+from SmartMoveFinder import Engine
 
 
 class GameState:

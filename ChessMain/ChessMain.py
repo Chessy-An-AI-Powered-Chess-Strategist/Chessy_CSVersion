@@ -3,8 +3,9 @@ import numpy as np
 import pygame as p
 from ChessEngine.GameState import GameState
 from ChessEngine.Move import Move
-import ChessEngine.SmartMoveFinder as smf
+import ChessEngine.SmartMoveFinderTest as smf
 from ChessMain.gui import gui_settings
+from SmartMoveFinder import Engine
 
 p.init()
 
