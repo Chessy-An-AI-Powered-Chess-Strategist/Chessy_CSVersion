@@ -262,17 +262,21 @@ class GameState:
                 if self.board[row - 1][col - 1][0] == 'b':
                     """There is an enemy piece to capture to the left"""
                     if not is_pin or pin_direction == (-1, -1):
+<<<<<<< Updated upstream
                         moves.append(Move((row, col), (row - 1, col - 1), self.board))
                 elif (row-1, col-1) == self.enpassant_coord:
                     if not is_pin or pin_direction == (-1, -1):
                         moves.append(Move((row, col), (row + 1, col - 1), self.board, enpessant_possbile=True))
 
+=======
+                        moves.append(Move((row, col), (row - 1, col - 1), self.board, True))
+>>>>>>> Stashed changes
 
             if col + 1 <= 7:
                 if self.board[row - 1][col + 1][0] == 'b':
                     """There is an enemy piece to capture to the right"""
                     if not is_pin or pin_direction == (-1, 1):
-                        moves.append(Move((row, col), (row - 1, col + 1), self.board))
+                        moves.append(Move((row, col), (row - 1, col + 1), self.board, True))
 
                 elif (row-1, col+1) == self.enpassant_coord:
                     if not is_pin or pin_direction == (-1, 1):
@@ -294,7 +298,7 @@ class GameState:
                 if self.board[row + 1][col - 1][0] == 'w':
                     """There is an enemy piece to capture to the left"""
                     if not is_pin or pin_direction == (1, -1):
-                        moves.append(Move((row, col), (row + 1, col - 1), self.board))
+                        moves.append(Move((row, col), (row + 1, col - 1), self.board, True))
 
                 elif (row + 1, col-1) == self.enpassant_coord:
                     if not is_pin or pin_direction == (1, -1):
@@ -304,7 +308,7 @@ class GameState:
                 if self.board[row + 1][col + 1][0] == 'w':
                     """There is an enemy piece to capture to the right"""
                     if not is_pin or pin_direction == (1, 1):
-                        moves.append(Move((row, col), (row + 1, col + 1), self.board))
+                        moves.append(Move((row, col), (row + 1, col + 1), self.board, True))
 
                 elif (row + 1, col+1) == self.enpassant_coord:
                     if not is_pin or pin_direction == (1, 1):
@@ -346,7 +350,7 @@ class GameState:
                             moves.append(Move((row, col), (end_row, end_col), self.board))
                         elif end_piece[0] == enemy_color:  # enemy piece
                             # Capture the piece
-                            moves.append(Move((row, col), (end_row, end_col), self.board))
+                            moves.append(Move((row, col), (end_row, end_col), self.board, True))
                             break
                         else:
                             break
@@ -377,7 +381,7 @@ class GameState:
                         moves.append(Move((row, col), (end_row, end_col), self.board))
                     elif end_piece[0] != self.board[row][col][0]:  # enemy piece
                         # Capture the piece
-                        moves.append(Move((row, col), (end_row, end_col), self.board))
+                        moves.append(Move((row, col), (end_row, end_col), self.board, True))
 
     def get_bishop_moves(self, row, col, moves):
         """
@@ -412,7 +416,7 @@ class GameState:
                             moves.append(Move((row, col), (end_row, end_col), self.board))
                         elif end_piece[0] == enemy_color:  # enemy piece
                             # Capture the piece
-                            moves.append(Move((row, col), (end_row, end_col), self.board))
+                            moves.append(Move((row, col), (end_row, end_col), self.board, True))
                             break
                         else:
                             break

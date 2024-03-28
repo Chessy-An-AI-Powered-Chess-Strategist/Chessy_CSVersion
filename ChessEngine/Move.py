@@ -22,7 +22,11 @@ class Move:
                      "e": 4, "f": 5, "g": 6, "h": 7}
     cols_to_files = {v: k for k, v in files_to_cols.items()}
 
+<<<<<<< Updated upstream
     def __init__(self, start_sq, end_sq, board, enpessant_possbile = False) -> None:
+=======
+    def __init__(self, start_sq, end_sq, board, is_capture: bool = False) -> None:
+>>>>>>> Stashed changes
         """
         A constructor that initializes a new Move object
         """
@@ -47,6 +51,8 @@ class Move:
 
         # create a move id (4 digits)
         self.move_id = self.start_row * 1000 + self.start_col * 100 + self.end_row * 10 + self.end_col
+
+        self.is_capture = is_capture
 
     def __eq__(self, other) -> bool:  # Overriding the equality operator to compare two moves
         """A function that returns if two moves are the same"""

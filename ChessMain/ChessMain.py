@@ -8,6 +8,7 @@ from ChessMain.gui import gui_settings
 from SmartMoveFinder.Engine import Engine
 
 p.init()
+p.mixer.init()
 
 
 def main():
@@ -30,6 +31,12 @@ def main():
     game_state = GameState()
     engine = Engine(game_state)
 
+    start_sound = p.mixer.Sound("game_start.mp3")
+    start_sound.play()
+
+    # Sound related state variables
+    end_sound_played = False
+
     # ToDo: Must move this to tree
     valid_moves = game_state.get_valid_moves()
     move_made = False  # flag variable for when a move is made
@@ -38,8 +45,8 @@ def main():
     running, game_over = True, False
 
     # AI related inputs
-    is_player_white_human = True
-    is_player_black_human = True
+    is_player_white_human = False
+    is_player_black_human = False
 
     sq_selected = ()
     player_clicks = []
@@ -72,6 +79,7 @@ def main():
                     # Check if the player has clicked twice to make a move
                     if len(player_clicks) == 2:
                         move_object = Move(player_clicks[0], player_clicks[1], game_state.board)
+<<<<<<< Updated upstream
                         # print(move_object)
                         for i in range(len(valid_moves)):
                             if move_object == valid_moves[i]:
@@ -82,6 +90,18 @@ def main():
                                 player_clicks = []
 
                         if not move_made:
+=======
+
+                        if move_object in valid_moves:
+                            move_object = [move for move in valid_moves if move.move_id == move_object.move_id][0]
+                            game_state.make_move(move_object)
+                            move_made, animate = True, True
+                            # reset the player clicks
+                            sq_selected = ()
+                            player_clicks = []
+
+                        else:
+>>>>>>> Stashed changes
                             player_clicks = [sq_selected]
 
             elif e.type == p.KEYDOWN:
@@ -115,11 +135,30 @@ def main():
                 animate = False
 
             valid_moves = game_state.get_valid_moves()
+
+            if game_state.in_check:
+                check_sound = p.mixer.Sound("check.mp3")
+                check_sound.play()
+
+            elif game_state.move_log[-1].is_capture:
+                capture_sound = p.mixer.Sound("capture.mp3")
+                capture_sound.play()
+
+            else:
+                move_sound = p.mixer.Sound("move.mp3")
+                move_sound.play()
+
             move_made = False
 
         draw_game_state(screen, game_state, sq_selected)
 
         if game_state.is_checkmate:
+
+            if not end_sound_played:
+                end_sound = p.mixer.Sound("game_end.mp3")
+                end_sound.play()
+                end_sound_played = True
+
             game_over = True
             if game_state.white_to_move:
                 draw_text(screen, "Black wins by checkmate")
@@ -127,6 +166,12 @@ def main():
                 draw_text(screen, "White wins by checkmate")
 
         elif game_state.is_stalemate:
+
+            if not end_sound_played:
+                end_sound = p.mixer.Sound("game_end.mp3")
+                end_sound.play()
+                end_sound_played = True
+
             game_over = True
             draw_text(screen, "Stalemate")
 
