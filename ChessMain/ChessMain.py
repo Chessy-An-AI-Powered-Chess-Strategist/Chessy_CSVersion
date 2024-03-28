@@ -71,15 +71,15 @@ def main():
                     if len(player_clicks) == 2:
                         move_object = Move(player_clicks[0], player_clicks[1], game_state.board)
                         # print(move_object)
+                        for i in range(len(valid_moves)):
+                            if move_object == valid_moves[i]:
+                                game_state.make_move(valid_moves[i])
+                                move_made, animate = True, True
+                                # reset the player clicks
+                                sq_selected = ()
+                                player_clicks = []
 
-                        if move_object in valid_moves:
-                            game_state.make_move(move_object)
-                            move_made, animate = True, True
-                            # reset the player clicks
-                            sq_selected = ()
-                            player_clicks = []
-
-                        else:
+                        if not move_made:
                             player_clicks = [sq_selected]
 
             elif e.type == p.KEYDOWN:
