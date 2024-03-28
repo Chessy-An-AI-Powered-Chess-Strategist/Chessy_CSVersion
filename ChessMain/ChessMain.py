@@ -219,7 +219,8 @@ def draw_pieces(screen, board):
 def animate_move(move, screen, board, clock):
     delta_row = move.end_row - move.start_row
     delta_col = move.end_col - move.start_col
-    frames_per_square = 10  # frames to move one square
+
+    frames_per_square = max(12 + -2 * abs(delta_row) + -2 * abs(delta_row), 2)
     frame_count = (abs(delta_row) + abs(delta_col)) * frames_per_square
 
     for frame in range(frame_count + 1):
