@@ -37,7 +37,7 @@ def main():
 
     # AI related inputs
     is_player_white_human = True
-    is_player_black_human = False
+    is_player_black_human = True
 
     sq_selected = ()
     player_clicks = []
@@ -98,10 +98,10 @@ def main():
 
         # AI move finder logic
         if not game_over and not human_turn:
-            move = smf.findRandomMove(valid_moves)
-            # move = smf.findBestMove(game_state, valid_moves)
-            # if move is None:
-            #     move = smf.findRandomMove(valid_moves)
+            move = smf.minimax_non_recursive(game_state, valid_moves)
+            # move = smf.findRandomMove(valid_moves)
+            if move is None:
+                move = smf.findRandomMove(valid_moves)
             game_state.make_move(move)
             move_made = True
             animate = True

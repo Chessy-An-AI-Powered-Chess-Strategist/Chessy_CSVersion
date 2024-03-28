@@ -101,8 +101,6 @@ class GameState:
             print(
                 f"Move undone: {last_move.piece_moved} from {(last_move.start_row, last_move.start_col)} to {(last_move.end_row, last_move.end_col)}")
 
-<<<<<<< Updated upstream
-=======
     def get_valid_moves_try2(self):
         """
         A function that obtains all valid moves on a chessboard that have to do with checks.
@@ -157,7 +155,6 @@ class GameState:
         print(f"Valid moves:", [str(move) for move in moves])
         return moves  # ToDo: Implement this method
 
->>>>>>> Stashed changes
     def get_valid_moves(self):
         """
         A function that returns a list of all the valid moves that can be made at the current game state
