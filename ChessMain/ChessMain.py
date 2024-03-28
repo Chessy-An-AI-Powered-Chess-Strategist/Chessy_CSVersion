@@ -2,7 +2,7 @@ import numpy as np
 import pygame as p
 from ChessEngine.GameState import GameState
 from ChessEngine.Move import Move
-
+import ChessEngine.SmartMoveFinder as smf
 from ChessMain.gui import gui_settings
 
 p.init()
@@ -20,16 +20,24 @@ def main():
     animate = False  # flag variable for when we should animate a move
 
     running, game_over = True, False
+
+    # AI related inputs
+    is_player_white_human = True
+    is_player_black_human = False
+
     sq_selected = ()
     player_clicks = []
     while running:
-        for e in p.event.get():
-            if not game_over:
-                if e.type == p.QUIT:
-                    running = False
+        human_turn = (game_state.white_to_move and is_player_white_human) or (not game_state.white_to_move and is_player_black_human)
 
-                elif e.type == p.MOUSEBUTTONDOWN:
-                    """handle the mouse click event"""
+        for e in p.event.get():
+
+            if e.type == p.QUIT:
+                running = False
+
+            elif e.type == p.MOUSEBUTTONDOWN:
+                """handle the mouse click event"""
+                if not game_over and human_turn:
                     # print(len(player_clicks))
                     location = p.mouse.get_pos()  # (x, y) location of mouse
                     col = location[0]//gui_settings["SQ_SIZE"]
@@ -73,6 +81,16 @@ def main():
                     player_clicks = []
                     move_made = False
                     animate = False
+
+        # AI move finder logic
+        if not game_over and not human_turn:
+            move = smf.findRandomMove(valid_moves)
+            # move = smf.findBestMove(game_state, valid_moves)
+            # if move is None:
+            #     move = smf.findRandomMove(valid_moves)
+            game_state.make_move(move)
+            move_made = True
+            animate = True
 
         if move_made:
             """update the valid moves"""
