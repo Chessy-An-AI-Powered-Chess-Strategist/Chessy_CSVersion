@@ -8,6 +8,7 @@ STALEMATE = 0
 def findRandomMove(validMoves):
     return validMoves[random.randint(0, len(validMoves)-1)]
 
+
 def findBestMove(gs, validMoves):
     turn_multiplier = 1 if gs.white_to_move else -1
     opponent_min_max_score = -CHECKMATE

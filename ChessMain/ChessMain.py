@@ -5,7 +5,7 @@ from ChessEngine.GameState import GameState
 from ChessEngine.Move import Move
 import ChessEngine.SmartMoveFinderTest as smf
 from ChessMain.gui import gui_settings
-from SmartMoveFinder import Engine
+from SmartMoveFinder.Engine import Engine
 
 p.init()
 
@@ -28,6 +28,7 @@ def main():
     clock = p.time.Clock()
     screen.fill(p.Color("white"))
     game_state = GameState()
+    engine = Engine(game_state)
 
     # ToDo: Must move this to tree
     valid_moves = game_state.get_valid_moves()
@@ -99,7 +100,7 @@ def main():
 
         # AI move finder logic
         if not game_over and not human_turn:
-            move = smf.minimax_non_recursive(game_state, valid_moves)
+            move = engine.find_best_move_tree(game_state, valid_moves)
             # move = smf.findRandomMove(valid_moves)
             if move is None:
                 move = smf.findRandomMove(valid_moves)

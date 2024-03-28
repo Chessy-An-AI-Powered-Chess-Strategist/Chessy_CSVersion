@@ -2,7 +2,6 @@
 import numpy as np
 from typing import Optional
 from ChessEngine.Move import Move
-from SmartMoveFinder import Engine
 
 
 class GameState:
@@ -103,8 +102,12 @@ class GameState:
             self.move_log = self.move_log[:-1]
             self.white_to_move = not self.white_to_move  # switch turns back
 
-            print(
-                f"Move undone: {last_move.piece_moved} from {(last_move.start_row, last_move.start_col)} to {(last_move.end_row, last_move.end_col)}")
+            # Undo checkmate and stalemate
+            self.is_checkmate = False
+            self.is_stalemate = False
+
+            # print(
+            #     f"Move undone: {last_move.piece_moved} from {(last_move.start_row, last_move.start_col)} to {(last_move.end_row, last_move.end_col)}")
 
     def get_valid_moves_try2(self):
         """
