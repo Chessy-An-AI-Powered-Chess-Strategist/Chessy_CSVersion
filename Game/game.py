@@ -17,10 +17,6 @@ def main():
     graphics = GraphicsUserInterface(gui_settings)
     game_state = GameState()
 
-    screen = p.display.set_mode((gui_settings["WIDTH"], gui_settings["HEIGHT"]))
-    clock = p.time.Clock()
-    screen.fill(p.Color("white"))
-
     running = True
     while running:
         human_turn = ((game_state.white_to_move and is_player_white_human) or

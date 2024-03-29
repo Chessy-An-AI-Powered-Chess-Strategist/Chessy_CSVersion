@@ -115,21 +115,22 @@ class GraphicsUserInterface:
         # print(move_object)
         for i in range(len(self.valid_moves)):
             if move_object == self.valid_moves[i]:
+                move_object.is_capture = self.valid_moves[i].is_capture
 
                 game_state.make_move(self.valid_moves[i])
 
                 # play the move sound # ToDo: Sound does not work
-                if game_state.is_checkmate:
-                    self._play_sound("game_end")
-
-                elif game_state.in_check:
-                    self._play_sound("check")
-
-                elif self.valid_moves[i].is_capture:
-                    self._play_sound("capture")
-
-                else:
-                    self._play_sound("move")
+                # if game_state.is_checkmate:
+                #     self._play_sound("game_end")
+                #
+                # elif game_state.in_check:
+                #     self._play_sound("check")
+                #
+                # elif self.valid_moves[i].is_capture:
+                #     self._play_sound("capture")
+                #
+                # else:
+                #     self._play_sound("move")
 
                 # animate move
                 self._animate_move(game_state, self.valid_moves[i])
@@ -156,7 +157,7 @@ class GraphicsUserInterface:
         delta_col = move.end_col - move.start_col
 
         # frames_per_square = max(17 + -2 * abs(delta_row) + -2 * abs(delta_row), 3)
-        frames_per_square = 10 # frames to move one square
+        frames_per_square = 15 # frames to move one square
 
         frame_count = (abs(delta_row) + abs(delta_col)) * frames_per_square
 
@@ -179,6 +180,18 @@ class GraphicsUserInterface:
             pygame.display.flip()
             self.clock.tick(60)
 
+        # play relevant sounds # ToDo: Audio Fix needed
+        if game_state.is_checkmate:
+            self._play_sound("game_end")
+
+        elif game_state.in_check:
+            self._play_sound("check")
+
+        elif move.is_capture:
+            self._play_sound("capture")
+
+        else:
+            self._play_sound("move")
 
     def _play_sound(self, sound_name):
         """
