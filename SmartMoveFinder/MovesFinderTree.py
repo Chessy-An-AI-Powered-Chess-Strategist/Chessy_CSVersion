@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import copy
-from ChessEngine.Move import Move
-from ChessEngine.GameState import GameState
+from Engine.Move import Move
+from Engine.gameState import GameState
 from SmartMoveFinder.Settings import tree_settings
 from SmartMoveFinder.BoardAlgorithems import board_evaluation
 

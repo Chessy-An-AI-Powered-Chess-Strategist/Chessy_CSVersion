@@ -1,7 +1,7 @@
 # importing required packages
 import numpy as np
 from typing import Optional
-from ChessEngine.Move import Move
+from Engine.Move import Move
 
 
 class GameState:
@@ -176,7 +176,6 @@ class GameState:
         if self.in_check:
             if len(self.checks) == 1:  # only 1 check, block the check or move the king
                 moves = self.get_all_possible_moves()
-
                 check = self.checks[0]
                 check_row, check_col = check[0], check[1]
                 piece_checking = self.board[check_row][check_col]

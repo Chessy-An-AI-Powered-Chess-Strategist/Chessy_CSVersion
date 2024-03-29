@@ -1,9 +1,9 @@
 # importing required packages
 import numpy as np
 import pygame as p
-from ChessEngine.GameState import GameState
-from ChessEngine.Move import Move
-import ChessEngine.SmartMoveFinderTest as smf
+from Engine.gameState import GameState
+from Engine.Move import Move
+import Engine.SmartMoveFinderTest as smf
 from ChessMain.gui import gui_settings
 from SmartMoveFinder.Engine import Engine
 
@@ -45,8 +45,8 @@ def main():
     running, game_over = True, False
 
     # AI related inputs
-    is_player_white_human = False
-    is_player_black_human = False
+    is_player_white_human = True
+    is_player_black_human = True
 
     sq_selected = ()
     player_clicks = []
@@ -178,6 +178,7 @@ def main():
         clock.tick(gui_settings["MAX_FPS"])
         p.display.flip()
 
+
 def draw_game_state(screen, gs, sq_selected=()):
     draw_board(screen)
     # ToDo: add in piece highlighting or move suggestions
@@ -197,7 +198,6 @@ def highlight_squares(screen, gs, valid_moves, sq_selected):
             for move in valid_moves:
                 if move.start_row == r and move.start_col == c:
                     screen.blit(s, (move.end_col*gui_settings["SQ_SIZE"], move.end_row*gui_settings["SQ_SIZE"]))
-
 
 
 def draw_board(screen):
@@ -220,7 +220,9 @@ def animate_move(move, screen, board, clock):
     delta_row = move.end_row - move.start_row
     delta_col = move.end_col - move.start_col
 
-    frames_per_square = max(12 + -2 * abs(delta_row) + -2 * abs(delta_row), 2)
+    frames_per_square = max(17 + -2 * abs(delta_row) + -2 * abs(delta_row), 3)
+    # frames_per_square = 10 # frames to move one square
+
     frame_count = (abs(delta_row) + abs(delta_col)) * frames_per_square
 
     for frame in range(frame_count + 1):

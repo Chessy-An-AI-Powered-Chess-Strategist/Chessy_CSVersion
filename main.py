@@ -1,3 +1,12 @@
-from ChessMain.ChessMain import main
+# from ChessMain.ChessMain import main
+from Game.game import main
 
-main()
+
+
+def run():
+    from Game import game
+    main()
+
+
+if __name__ == '__main__':
+    run()

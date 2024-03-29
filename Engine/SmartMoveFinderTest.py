@@ -6,6 +6,7 @@ STALEMATE = 0
 
 
 def findRandomMove(validMoves):
+    print('Random move.......')
     return validMoves[random.randint(0, len(validMoves)-1)]
 
 
