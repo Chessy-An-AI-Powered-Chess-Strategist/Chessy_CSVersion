@@ -11,6 +11,8 @@ def run():
     # print(type(game_state))
     # tree = MoveFinderTree(game_state, None)
     # tree.print_tree()
+    #
+    # print(tree.find_next_best_move(game_state))
 
 if __name__ == '__main__':
     run()
