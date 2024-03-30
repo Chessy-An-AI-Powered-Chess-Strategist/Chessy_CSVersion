@@ -22,7 +22,11 @@ class Move:
                      "e": 4, "f": 5, "g": 6, "h": 7}
     cols_to_files = {v: k for k, v in files_to_cols.items()}
 
+<<<<<<< Updated upstream:Engine/Move.py
     def __init__(self, start_sq, end_sq, board, is_capture: bool = False, enpessant_possbile=False, is_castle_move=False) -> None:
+=======
+    def __init__(self, start_sq, end_sq, board, enpessant_possbile=False) -> None:
+>>>>>>> Stashed changes:ChessEngine/Move.py
         """
         A constructor that initializes a new Move object
         """
@@ -41,6 +45,8 @@ class Move:
 
         # check for enpessant move
         self.is_enpessant_move = enpessant_possbile
+        if self.is_enpessant_move:
+            self.piece_captured = 'wp' if self.piece_moved == 'bp' else 'bp'
 
         if self.piece_moved == 'wp' and self.end_row == 0 or self.piece_moved == 'bp' and self.end_row == 7:
             self.is_pawn_promotion = True
