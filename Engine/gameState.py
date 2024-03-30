@@ -87,11 +87,9 @@ class GameState:
         elif move.piece_moved == 'bK':
             self.black_king_location = (move.end_row, move.end_col)
 
-        # Pawn Promotion
         if move.is_pawn_promotion:
             self.board[move.end_row][move.end_col] = move.piece_moved[0] + 'Q'
 
-<<<<<<< Updated upstream:Engine/gameState.py
         #  castle move
         if move.is_castle_move:
             if move.end_col - move.start_col == 2:  #  king side castle
@@ -105,17 +103,6 @@ class GameState:
         self.update_castle_rights(move)
         self.castRightLog.append(CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
                                               self.currentCastlingRight.wqs, self.currentCastlingRight.bqs))
-=======
-        # enpressant move
-        if move.is_enpessant_move:
-            self.board[move.start_row][move.end_col] = '--'
-
-        # update enpessant_possbile
-        if move.piece_moved[1] == 'p' and abs(move.start_row - move.end_row) == 2:  # two square pawn move
-            self.enpassant_coord = ((move.start_row + move.end_row) // 2, move.end_col)  # the enpessant square
-        else:
-            self.enpassant_coord = ()
->>>>>>> Stashed changes:ChessEngine/GameState.py
 
         print(
             f"Move made: {move.piece_moved} from {(move.start_row, move.start_col)} to {(move.end_row, move.end_col)}")
@@ -132,7 +119,6 @@ class GameState:
             self.move_log = self.move_log[:-1]
             self.white_to_move = not self.white_to_move  # switch turns back
 
-<<<<<<< Updated upstream:Engine/gameState.py
             # Undo checkmate and stalemate
             self.is_checkmate = False
             self.is_stalemate = False
@@ -175,20 +161,6 @@ class GameState:
                     self.currentCastlingRight.bqs = False
                 elif move.start_col == 7: #  right rook
                     self.currentCastlingRight.bks = False
-=======
-            # undoing enpessant move
-            if last_move.is_enpessant_move:
-                self.board[last_move.end_row][last_move.end_col] = '--'
-                self.board[last_move.start_row][last_move.end_col] = last_move.piece_captured
-                self.enpassant_coord = (last_move.end_row, last_move.end_col)
-
-            # undoing two square pawn move
-            if last_move.piece_moved[1] == 'p' and abs(last_move.start_row - last_move.end_row) == 2:
-                self.enpassant_coord = ()
-
-            print(
-                f"Move undone: {last_move.piece_moved} from {(last_move.start_row, last_move.start_col)} to {(last_move.end_row, last_move.end_col)}")
->>>>>>> Stashed changes:ChessEngine/GameState.py
 
     def get_valid_moves_try2(self):
         """
@@ -260,7 +232,6 @@ class GameState:
         """
         A function that returns a list of all the valid moves that can be made at the current game state
         """
-        temp_enpessant_coord = self.enpassant_coord
         moves = []
         self._check_for_pins_and_checks()
         self.in_check, self.pins, self.checks = self.check_for_pins_and_checks
@@ -308,7 +279,6 @@ class GameState:
                 self.is_stalemate = True
                 print("Stalemate")
 
-        self.enpassant_coord = temp_enpessant_coord
         return moves
 
     def get_valid_moves_video(self):
@@ -386,15 +356,11 @@ class GameState:
                     """There is an enemy piece to capture to the left"""
                     if not is_pin or pin_direction == (-1, -1):
                         moves.append(Move((row, col), (row - 1, col - 1), self.board))
-                elif (row - 1, col - 1) == self.enpassant_coord:
+                elif (row-1, col-1) == self.enpassant_coord:
                     if not is_pin or pin_direction == (-1, -1):
-<<<<<<< Updated upstream:Engine/gameState.py
                         moves.append(Move((row, col), (row + 1, col - 1), self.board, enpessant_possbile=True))
 
                         moves.append(Move((row, col), (row - 1, col - 1), self.board, True))
-=======
-                        moves.append(Move((row, col), (row - 1, col - 1), self.board, enpessant_possbile=True))
->>>>>>> Stashed changes:ChessEngine/GameState.py
 
             if col + 1 <= 7:
                 if self.board[row - 1][col + 1][0] == 'b':
@@ -402,9 +368,9 @@ class GameState:
                     if not is_pin or pin_direction == (-1, 1):
                         moves.append(Move((row, col), (row - 1, col + 1), self.board, True))
 
-                elif (row - 1, col + 1) == self.enpassant_coord:
+                elif (row-1, col+1) == self.enpassant_coord:
                     if not is_pin or pin_direction == (-1, 1):
-                        moves.append(Move((row, col), (row - 1, col + 1), self.board, enpessant_possbile=True))
+                        moves.append(Move((row, col), (row + 1, col + 1), self.board, enpessant_possbile=True))
 
         else:
             """Black pawn moves"""
@@ -424,7 +390,7 @@ class GameState:
                     if not is_pin or pin_direction == (1, -1):
                         moves.append(Move((row, col), (row + 1, col - 1), self.board, True))
 
-                elif (row + 1, col - 1) == self.enpassant_coord:
+                elif (row + 1, col-1) == self.enpassant_coord:
                     if not is_pin or pin_direction == (1, -1):
                         moves.append(Move((row, col), (row + 1, col - 1), self.board, enpessant_possbile=True))
 
@@ -434,7 +400,7 @@ class GameState:
                     if not is_pin or pin_direction == (1, 1):
                         moves.append(Move((row, col), (row + 1, col + 1), self.board, True))
 
-                elif (row + 1, col + 1) == self.enpassant_coord:
+                elif (row + 1, col+1) == self.enpassant_coord:
                     if not is_pin or pin_direction == (1, 1):
                         moves.append(Move((row, col), (row + 1, col + 1), self.board, enpessant_possbile=True))
 
