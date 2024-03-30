@@ -689,7 +689,7 @@ class CastleRights:
     """
     # Fill in later
     """
-    def __int__(self,  wks, bks, wqs, bqs):
+    def __init__(self,  wks, bks, wqs, bqs):
         self.wks = wks
         self.bks = bks
         self.wqs = wqs
