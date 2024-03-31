@@ -91,21 +91,22 @@ class GameState:
         if move.is_pawn_promotion:
             self.board[move.end_row][move.end_col] = move.piece_moved[0] + 'Q'
 
-<<<<<<< Updated upstream:Engine/gameState.py
         #  castle move
         if move.is_castle_move:
-            if move.end_col - move.start_col == 2:  #  king side castle
-                self.board[move.end_row][move.end_col - 1] = self.board[move.end_row][move.end_col + 1]  # moves the rook
+            if move.end_col - move.start_col == 2:  # king side castle
+                self.board[move.end_row][move.end_col - 1] = self.board[move.end_row][
+                    move.end_col + 1]  # moves the rook
                 self.board[move.end_row][move.end_col + 1] = '--'  # erase old rook
-            else: #  queen side castle
-                self.board[move.end_row][move.end_col + 1] = self.board[move.end_row][move.end_col - 2]  # moves the rook
+            else:  # queen side castle
+                self.board[move.end_row][move.end_col + 1] = self.board[move.end_row][
+                    move.end_col - 2]  # moves the rook
                 self.board[move.end_row][move.end_col - 2] = '--'
 
         #  update castling rights - whenever it is a rook or king move
         self.update_castle_rights(move)
         self.castRightLog.append(CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
                                               self.currentCastlingRight.wqs, self.currentCastlingRight.bqs))
-=======
+
         # enpressant move
         if move.is_enpessant_move:
             self.board[move.start_row][move.end_col] = '--'
@@ -115,7 +116,6 @@ class GameState:
             self.enpassant_coord = ((move.start_row + move.end_row) // 2, move.end_col)  # the enpessant square
         else:
             self.enpassant_coord = ()
->>>>>>> Stashed changes:ChessEngine/GameState.py
 
         print(
             f"Move made: {move.piece_moved} from {(move.start_row, move.start_col)} to {(move.end_row, move.end_col)}")
@@ -132,22 +132,34 @@ class GameState:
             self.move_log = self.move_log[:-1]
             self.white_to_move = not self.white_to_move  # switch turns back
 
-<<<<<<< Updated upstream:Engine/gameState.py
             # Undo checkmate and stalemate
             self.is_checkmate = False
             self.is_stalemate = False
 
+            # Undo enpessant
+            if last_move.is_enpessant_move:
+                self.board[last_move.end_row][last_move.end_col] = '--'
+                self.board[last_move.start_row][last_move.end_col] = last_move.piece_captured
+                self.enpassant_coord = (last_move.end_row, last_move.end_col)
+
+                # undoing two square pawn move
+            if last_move.piece_moved[1] == 'p' and abs(last_move.start_row - last_move.end_row) == 2:
+                self.enpassant_coord = ()
+
             #  undo castling rights
-            self.castRightLog.pop()  #  get rid of new castle rights from move we are undoing
-            self.currentCastlingRight = self.castRightLog[-1]  # set the current castle rights to the last one in the list
+            self.castRightLog.pop()  # get rid of new castle rights from move we are undoing
+            self.currentCastlingRight = self.castRightLog[
+                -1]  # set the current castle rights to the last one in the list
 
             #  undo castle move
             if last_move.is_castle_move:
-                if last_move.end_col - last_move.start_col == 2: #  king side
-                    self.board[last_move.end_row][last_move.end_col + 1] = self.board[last_move.end_row][last_move.end_col - 1]
+                if last_move.end_col - last_move.start_col == 2:  # king side
+                    self.board[last_move.end_row][last_move.end_col + 1] = self.board[last_move.end_row][
+                        last_move.end_col - 1]
                     self.board[last_move.end_row][last_move.end_col - 1] = '--'
                 else:  # queen side
-                    self.board[last_move.end_row][last_move.end_col - 2] = self.board[last_move.end_row][last_move.end_col + 1]
+                    self.board[last_move.end_row][last_move.end_col - 2] = self.board[last_move.end_row][
+                        last_move.end_col + 1]
                     self.board[last_move.end_row][last_move.end_col + 1] = "--"
 
             # print(
@@ -167,15 +179,14 @@ class GameState:
             if move.start_row == 7:
                 if move.start_col == 0:  # left rook
                     self.currentCastlingRight.wqs = False
-                elif move.start_col == 7: #  right rook
+                elif move.start_col == 7:  # right rook
                     self.currentCastlingRight.wks = False
         elif move.piece_moved == 'bR':
             if move.start_row == 0:
                 if move.start_col == 0:  # left rook
                     self.currentCastlingRight.bqs = False
-                elif move.start_col == 7: #  right rook
+                elif move.start_col == 7:  # right rook
                     self.currentCastlingRight.bks = False
-=======
             # undoing enpessant move
             if last_move.is_enpessant_move:
                 self.board[last_move.end_row][last_move.end_col] = '--'
@@ -188,7 +199,6 @@ class GameState:
 
             print(
                 f"Move undone: {last_move.piece_moved} from {(last_move.start_row, last_move.start_col)} to {(last_move.end_row, last_move.end_col)}")
->>>>>>> Stashed changes:ChessEngine/GameState.py
 
     def get_valid_moves_try2(self):
         """
@@ -242,7 +252,7 @@ class GameState:
             moves = self.get_all_possible_moves()
 
         print(f"Valid moves:", [str(move) for move in moves])
-        return moves  # ToDo: Implement this method
+        return moves
 
     def square_under_attack(self, row, col):
         """
@@ -250,7 +260,7 @@ class GameState:
         """
         self.white_to_move = not self.white_to_move  # switch to opponent's turn
         opp_moves = self.get_all_possible_moves()
-        self.white_to_move = not self.white_to_move  #  switch turns back
+        self.white_to_move = not self.white_to_move  # switch turns back
         for move in opp_moves:
             if move.end_row == row and move.end_col == col:  # square is under attack
                 return True
@@ -315,7 +325,7 @@ class GameState:
         """
         A function that returns a list of all the valid moves that can be made at the current game state
         """
-        tempEnpassantPossible = self.EnpassantPossible
+        tempEnpassantPossible = self.enpassant_coord
         tempCastleRights = CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
                                         self.currentCastlingRight.wqs, self.currentCastlingRight.bqs)
         moves = self.get_all_possible_moves()
@@ -336,7 +346,7 @@ class GameState:
             else:
                 self.is_stalemate = True
 
-        self.enpassantPossible = tempEnpassantPossible
+        self.enpassant_coord = tempEnpassantPossible
         self.currentCastlingRight = tempCastleRights
         return moves
 
@@ -388,13 +398,7 @@ class GameState:
                         moves.append(Move((row, col), (row - 1, col - 1), self.board))
                 elif (row - 1, col - 1) == self.enpassant_coord:
                     if not is_pin or pin_direction == (-1, -1):
-<<<<<<< Updated upstream:Engine/gameState.py
-                        moves.append(Move((row, col), (row + 1, col - 1), self.board, enpessant_possbile=True))
-
-                        moves.append(Move((row, col), (row - 1, col - 1), self.board, True))
-=======
                         moves.append(Move((row, col), (row - 1, col - 1), self.board, enpessant_possbile=True))
->>>>>>> Stashed changes:ChessEngine/GameState.py
 
             if col + 1 <= 7:
                 if self.board[row - 1][col + 1][0] == 'b':
@@ -605,12 +609,13 @@ class GameState:
         #         elif end_piece[0] != self.board[row][col][0]:  # enemy piece
         #             # Capture the piece
         #             moves.append(Move((row, col), (end_row, end_col), self.board))
+
     def get_castle_moves(self, row, col, moves):
         """
         A function that generates all valid castle moves for the king at (r, c) and adds them to the list of moves
         """
         if self.square_under_attack(row, col):
-            return  #  can't castle while we are in check
+            return  # can't castle while we are in check
         if ((self.white_to_move and self.currentCastlingRight.wks) or
                 (not self.white_to_move and self.currentCastlingRight.bks)):
             self.get_king_side_castle_moves(row, col, moves)
@@ -624,16 +629,15 @@ class GameState:
         """
         if self.board[row][col + 1] == '--' and self.board[row][col + 2] == '--':
             if not self.square_under_attack(row, col + 1) and not self.square_under_attack(row, col + 2):
-                moves.append(Move(row, col), (row, col + 2), self.board, is_castle_move=True)
+                moves.append(Move((row, col), (row, col + 2), self.board, is_castle_move=True))
 
     def get_queen_side_castle_moves(self, row, col, moves):
         """
         A function that generates all valid castle moves on the queen side
         """
-        if self.board[row][col + 1] == '--' and self.board[row][col - 2] == '--' and self.board[row][col-3]:
+        if self.board[row][col + 1] == '--' and self.board[row][col - 2] == '--' and self.board[row][col - 3]:
             if not self.square_under_attack(row, col - 1) and not self.square_under_attack(row, col - 2):
-                moves.append(Move(row, col), (row, col + 2), self.board, is_castle_move=True)
-
+                moves.append(Move((row, col), (row, col + 2), self.board, is_castle_move=True))
 
     def _check_for_pins_and_checks(self, save_to_cache: Optional[bool] = True):
         """
@@ -723,7 +727,8 @@ class CastleRights:
     """
     # Fill in later
     """
-    def __init__(self,  wks, bks, wqs, bqs):
+
+    def __init__(self, wks, bks, wqs, bqs):
         self.wks = wks
         self.bks = bks
         self.wqs = wqs

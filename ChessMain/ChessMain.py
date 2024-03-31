@@ -10,7 +10,6 @@ from SmartMoveFinder.Engine import Engine
 p.init()
 p.mixer.init()
 
-
 def main():
     """
     A function that serves as the brain of the Chess Game. It displays the board and pieces and contains a while loop.
