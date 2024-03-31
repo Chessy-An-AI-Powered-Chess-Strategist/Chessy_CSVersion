@@ -5,6 +5,9 @@ from .move import Move
 
 
 class GameState:
+    """
+    # fill in later
+    """
     board: list[list[ChessPiece]]
     move_log: list[Move]
 

@@ -1,5 +1,3 @@
-
-
 class Move:
 
     # Positioning data for board and moves
