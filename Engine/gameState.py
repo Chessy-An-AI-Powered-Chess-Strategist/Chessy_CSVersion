@@ -94,12 +94,10 @@ class GameState:
         #  castle move
         if move.is_castle_move:
             if move.end_col - move.start_col == 2:  # king side castle
-                self.board[move.end_row][move.end_col - 1] = self.board[move.end_row][
-                    move.end_col + 1]  # moves the rook
+                self.board[move.end_row][move.end_col - 1] = self.board[move.end_row][move.end_col + 1]  # moves the rook
                 self.board[move.end_row][move.end_col + 1] = '--'  # erase old rook
             else:  # queen side castle
-                self.board[move.end_row][move.end_col + 1] = self.board[move.end_row][
-                    move.end_col - 2]  # moves the rook
+                self.board[move.end_row][move.end_col + 1] = self.board[move.end_row][move.end_col - 2]  # moves the rook
                 self.board[move.end_row][move.end_col - 2] = '--'
 
         #  update castling rights - whenever it is a rook or king move
@@ -148,18 +146,15 @@ class GameState:
 
             #  undo castling rights
             self.castRightLog.pop()  # get rid of new castle rights from move we are undoing
-            self.currentCastlingRight = self.castRightLog[
-                -1]  # set the current castle rights to the last one in the list
+            self.currentCastlingRight = self.castRightLog[-1]  # set the current castle rights to the last one in the list
 
             #  undo castle move
             if last_move.is_castle_move:
                 if last_move.end_col - last_move.start_col == 2:  # king side
-                    self.board[last_move.end_row][last_move.end_col + 1] = self.board[last_move.end_row][
-                        last_move.end_col - 1]
+                    self.board[last_move.end_row][last_move.end_col + 1] = self.board[last_move.end_row][last_move.end_col - 1]
                     self.board[last_move.end_row][last_move.end_col - 1] = '--'
                 else:  # queen side
-                    self.board[last_move.end_row][last_move.end_col - 2] = self.board[last_move.end_row][
-                        last_move.end_col + 1]
+                    self.board[last_move.end_row][last_move.end_col - 2] = self.board[last_move.end_row][last_move.end_col + 1]
                     self.board[last_move.end_row][last_move.end_col + 1] = "--"
 
             # print(
@@ -188,17 +183,17 @@ class GameState:
                 elif move.start_col == 7:  # right rook
                     self.currentCastlingRight.bks = False
             # undoing enpessant move
-            if last_move.is_enpessant_move:
-                self.board[last_move.end_row][last_move.end_col] = '--'
-                self.board[last_move.start_row][last_move.end_col] = last_move.piece_captured
-                self.enpassant_coord = (last_move.end_row, last_move.end_col)
+            if move.is_enpessant_move:
+                self.board[move.end_row][move.end_col] = '--'
+                self.board[move.start_row][move.end_col] = move.piece_captured
+                self.enpassant_coord = (move.end_row, move.end_col)
 
             # undoing two square pawn move
-            if last_move.piece_moved[1] == 'p' and abs(last_move.start_row - last_move.end_row) == 2:
+            if move.piece_moved[1] == 'p' and abs(move.start_row - move.end_row) == 2:
                 self.enpassant_coord = ()
 
             print(
-                f"Move undone: {last_move.piece_moved} from {(last_move.start_row, last_move.start_col)} to {(last_move.end_row, last_move.end_col)}")
+                f"Move undone: {move.piece_moved} from {(move.start_row, move.start_col)} to {(move.end_row, move.end_col)}")
 
     def get_valid_moves_try2(self):
         """
@@ -325,6 +320,8 @@ class GameState:
         """
         A function that returns a list of all the valid moves that can be made at the current game state
         """
+        for log in self.castRightLog:
+            print(log.wks, log.wqs, log.bks, log.bqs, end=' ,')
         tempEnpassantPossible = self.enpassant_coord
         tempCastleRights = CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
                                         self.currentCastlingRight.wqs, self.currentCastlingRight.bqs)
@@ -635,9 +632,9 @@ class GameState:
         """
         A function that generates all valid castle moves on the queen side
         """
-        if self.board[row][col + 1] == '--' and self.board[row][col - 2] == '--' and self.board[row][col - 3]:
+        if self.board[row][col - 1] == '--' and self.board[row][col - 2] == '--' and self.board[row][col - 3]:
             if not self.square_under_attack(row, col - 1) and not self.square_under_attack(row, col - 2):
-                moves.append(Move((row, col), (row, col + 2), self.board, is_castle_move=True))
+                moves.append(Move((row, col), (row, col - 2), self.board, is_castle_move=True))
 
     def _check_for_pins_and_checks(self, save_to_cache: Optional[bool] = True):
         """
@@ -723,7 +720,7 @@ class GameState:
         return in_check, pins, checks
 
 
-class CastleRights:
+class CastleRights():
     """
     # Fill in later
     """

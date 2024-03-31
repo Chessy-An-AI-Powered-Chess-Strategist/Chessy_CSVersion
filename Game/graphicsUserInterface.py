@@ -68,7 +68,7 @@ class GraphicsUserInterface:
                 s.fill(pygame.Color("blue"))
                 self.screen.blit(s, (c * self.settings["SQ_SIZE"], r * self.settings["SQ_SIZE"]))
                 s.fill(pygame.Color("yellow"))
-                for move in game_state.get_valid_moves():
+                for move in game_state.get_valid_moves_video():
                     if move.start_row == r and move.start_col == c:
                         self.screen.blit(s, (move.end_col * self.settings["SQ_SIZE"], move.end_row * self.settings["SQ_SIZE"]))
 
@@ -110,7 +110,7 @@ class GraphicsUserInterface:
         """
         A function that makes a move in the game.
         """
-        self.valid_moves = game_state.get_valid_moves()
+        self.valid_moves = game_state.get_valid_moves_video()
 
         # print(move_object)
         for i in range(len(self.valid_moves)):

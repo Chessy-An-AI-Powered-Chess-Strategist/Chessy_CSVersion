@@ -26,9 +26,9 @@ def main():
         graphics.draw_game_state(game_state)
 
         if running and not human_turn:
-            move = smf.minimax_non_recursive(game_state, game_state.get_valid_moves())
+            move = smf.minimax_non_recursive(game_state, game_state.get_valid_moves_video())
             if move is None:
-                move = smf.findRandomMove(game_state.get_valid_moves())
+                move = smf.findRandomMove(game_state.get_valid_moves_video())
 
             graphics.make_move(game_state, move)
 

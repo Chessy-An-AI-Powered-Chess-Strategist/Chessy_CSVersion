@@ -37,7 +37,7 @@ def main():
     end_sound_played = False
 
     # ToDo: Must move this to tree
-    valid_moves = game_state.get_valid_moves()
+    valid_moves = game_state.get_valid_moves_video()
     move_made = False  # flag variable for when a move is made
     animate = False  # flag variable for when we should animate a move
 
@@ -110,7 +110,7 @@ def main():
 
                 if e.key == p.K_r:
                     game_state = GameState()
-                    valid_moves = game_state.get_valid_moves()
+                    valid_moves = game_state.get_valid_moves_video()
                     sq_selected = ()
                     player_clicks = []
                     move_made = False
@@ -133,7 +133,7 @@ def main():
                 animate_move(game_state.move_log[-1], screen, game_state.board, clock)
                 animate = False
 
-            valid_moves = game_state.get_valid_moves()
+            valid_moves = game_state.get_valid_moves_video()
 
             if game_state.in_check:
                 check_sound = p.mixer.Sound("check.mp3")
@@ -181,7 +181,7 @@ def main():
 def draw_game_state(screen, gs, sq_selected=()):
     draw_board(screen)
     # ToDo: add in piece highlighting or move suggestions
-    highlight_squares(screen, gs, gs.get_valid_moves(), sq_selected)
+    highlight_squares(screen, gs, gs.get_valid_moves_video(), sq_selected)
     draw_pieces(screen, gs.board)
 
 
