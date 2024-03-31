@@ -20,7 +20,7 @@ class Engine:
 
     def find_best_move_tree(self, game_state, valid_moves):
 
-        # best_move = self.tree.find_best_move(game_state)
-        best_move = self.findRandomMove(valid_moves)
+        best_move = self.tree.find_best_move(game_state)
+        # best_move = self.findRandomMove(valid_moves)
 
         return best_move

@@ -1,11 +1,13 @@
 import pygame
 from Engine.Move import Move
+from Logic.pieces import Void
 
 
 class GraphicsUserInterface:
     """
     This class is responsible for the graphics of the game.
     """
+
     def __init__(self, settings: dict):
         self.valid_moves = None
         pygame.init()
@@ -45,7 +47,9 @@ class GraphicsUserInterface:
         for r in range(self.settings["DIMENSION"]):
             for c in range(self.settings["DIMENSION"]):
                 color = colors[((r + c) % 2)]
-                pygame.draw.rect(self.screen, color, pygame.Rect(c * self.settings["SQ_SIZE"], r * self.settings["SQ_SIZE"], self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
+                pygame.draw.rect(self.screen, color,
+                                 pygame.Rect(c * self.settings["SQ_SIZE"], r * self.settings["SQ_SIZE"],
+                                             self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
 
     def _draw_pieces(self, board):
         """
@@ -54,23 +58,39 @@ class GraphicsUserInterface:
         for r in range(self.settings["DIMENSION"]):
             for c in range(self.settings["DIMENSION"]):
                 piece = board[r][c]
-                if piece != "--":
-                    self.screen.blit(self.settings["IMAGES"][piece],
-                                pygame.Rect(c * self.settings["SQ_SIZE"], r * self.settings["SQ_SIZE"],
-                                       self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
+                if str(piece) != '--':
+                    self.screen.blit(self.settings["IMAGES"][piece.get_type()],
+                                     pygame.Rect(c * self.settings["SQ_SIZE"], r * self.settings["SQ_SIZE"],
+                                                 self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
 
     def _highlight_squares(self, game_state):
         if self.sq_selected != ():
             r, c = self.sq_selected[0], self.sq_selected[1]
-            if game_state.board[r][c][0] == ("w" if game_state.white_to_move else "b"):  # sq_selected is a piece that can be moved
+            if game_state.board[r][c].is_white == game_state.white_to_move:  # sq_selected is a piece that can be moved
                 s = pygame.Surface((self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
                 s.set_alpha(100)  # transparency value
                 s.fill(pygame.Color("blue"))
                 self.screen.blit(s, (c * self.settings["SQ_SIZE"], r * self.settings["SQ_SIZE"]))
-                s.fill(pygame.Color("yellow"))
-                for move in game_state.get_valid_moves_video():
+                for move in game_state.get_valid_moves():
                     if move.start_row == r and move.start_col == c:
-                        self.screen.blit(s, (move.end_col * self.settings["SQ_SIZE"], move.end_row * self.settings["SQ_SIZE"]))
+                        if move.is_capture:
+                            s.fill(pygame.Color("red"))  # change color to red if the move is a capture move
+                        else:
+                            s.fill(pygame.Color("yellow"))
+                        self.screen.blit(s, (
+                            move.end_col * self.settings["SQ_SIZE"], move.end_row * self.settings["SQ_SIZE"]))
+        # if self.sq_selected != ():
+        #     r, c = self.sq_selected[0], self.sq_selected[1]
+        #     if game_state.board[r][c].is_white == game_state.white_to_move:  # sq_selected is a piece that can be moved
+        #         s = pygame.Surface((self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
+        #         s.set_alpha(100)  # transparency value
+        #         s.fill(pygame.Color("blue"))
+        #         self.screen.blit(s, (c * self.settings["SQ_SIZE"], r * self.settings["SQ_SIZE"]))
+        #         s.fill(pygame.Color("yellow"))
+        #         for move in game_state.get_valid_moves():
+        #             if move.start_row == r and move.start_col == c:
+        #                 self.screen.blit(s, (
+        #                 move.end_col * self.settings["SQ_SIZE"], move.end_row * self.settings["SQ_SIZE"]))
 
     def handle_events(self, game_state):
         """
@@ -110,12 +130,16 @@ class GraphicsUserInterface:
         """
         A function that makes a move in the game.
         """
-        self.valid_moves = game_state.get_valid_moves_video()
+        self.valid_moves = game_state.get_valid_moves()
 
         # print(move_object)
         for i in range(len(self.valid_moves)):
-            if move_object == self.valid_moves[i]:
+            print(move_object)
+            # print("i:", self.valid_moves[i])
+            if str(move_object) == str(self.valid_moves[i]):
                 move_object.is_capture = self.valid_moves[i].is_capture
+
+                # print(self.valid_moves[i])
 
                 game_state.make_move(self.valid_moves[i])
 
@@ -157,7 +181,7 @@ class GraphicsUserInterface:
         delta_col = move.end_col - move.start_col
 
         # frames_per_square = max(17 + -2 * abs(delta_row) + -2 * abs(delta_row), 3)
-        frames_per_square = 15 # frames to move one square
+        frames_per_square = 15  # frames to move one square
 
         frame_count = (abs(delta_row) + abs(delta_col)) * frames_per_square
 
@@ -168,15 +192,17 @@ class GraphicsUserInterface:
             # erase the piece from its ending square
             color = pygame.Color("white") if (move.end_row + move.end_col) % 2 == 0 else pygame.Color("light blue")
             end_square = pygame.Rect(move.end_col * self.settings["SQ_SIZE"], move.end_row * self.settings["SQ_SIZE"],
-                                self.settings["SQ_SIZE"], self.settings["SQ_SIZE"])
+                                     self.settings["SQ_SIZE"], self.settings["SQ_SIZE"])
             pygame.draw.rect(self.screen, color, end_square)
             # draw captured piece back
-            if move.piece_captured != "--":
-                self.screen.blit(self.settings["IMAGES"][move.piece_captured], end_square)
+            if str(move.piece_captured) != "--":
+                self.screen.blit(self.settings["IMAGES"][move.piece_captured.get_type()], end_square)
+
+            # print(self.settings["IMAGES"])
             # draw moving piece
-            self.screen.blit(self.settings["IMAGES"][move.piece_moved],
-                        pygame.Rect(int(c * self.settings["SQ_SIZE"]), int(r * self.settings["SQ_SIZE"]),
-                               self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
+            self.screen.blit(self.settings["IMAGES"][move.piece_moved.get_type()],
+                             pygame.Rect(int(c * self.settings["SQ_SIZE"]), int(r * self.settings["SQ_SIZE"]),
+                                         self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
             pygame.display.flip()
             self.clock.tick(60)
 
@@ -198,13 +224,3 @@ class GraphicsUserInterface:
         A function that plays a sound.
         """
         self.settings["SOUNDS"][sound_name].play()
-
-
-
-
-
-
-
-
-
-

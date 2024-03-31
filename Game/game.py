@@ -2,8 +2,10 @@ from Game.settings import gui_settings
 from Game.graphicsUserInterface import GraphicsUserInterface
 import pygame as p
 # Engine imports
-from Engine.gameState import GameState
+from Logic import GameState
 import Engine.SmartMoveFinderTest as smf
+from SmartPlayer import Engine
+
 
 p.init()
 
@@ -17,6 +19,8 @@ def main():
     graphics = GraphicsUserInterface(gui_settings)
     game_state = GameState()
 
+    engine = Engine(game_state) if not is_player_black_human or not is_player_white_human else None
+
     running = True
     while running:
         human_turn = ((game_state.white_to_move and is_player_white_human) or
@@ -26,9 +30,11 @@ def main():
         graphics.draw_game_state(game_state)
 
         if running and not human_turn:
-            move = smf.minimax_non_recursive(game_state, game_state.get_valid_moves_video())
+            move = smf.minimax_non_recursive(game_state, game_state.get_valid_moves())
+            move = engine.find_best_move_tree(game_state, game_state.get_valid_moves())
             if move is None:
-                move = smf.findRandomMove(game_state.get_valid_moves_video())
+                print("No move found")
+                move = smf.findRandomMove(game_state.get_valid_moves())
 
             graphics.make_move(game_state, move)
 

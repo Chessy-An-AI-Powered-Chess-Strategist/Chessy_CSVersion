@@ -10,7 +10,7 @@ def run():
     # game_state = GameState()
     # print(type(game_state))
     # tree = MoveFinderTree(game_state, None)
-    # tree.print_tree()
+    # tree.draw_tree()
     #
     # print(tree.find_next_best_move(game_state))
 
