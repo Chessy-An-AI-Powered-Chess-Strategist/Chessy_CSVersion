@@ -141,7 +141,7 @@ class King(ChessPiece):
             end_row_dir = row_moves[j]
             end_col_dir = col_moves[j]
 
-            for i in range(8):
+            for i in range(1, 8):
                 end_row = row + end_row_dir * i
                 end_col = col + end_col_dir * i
 
