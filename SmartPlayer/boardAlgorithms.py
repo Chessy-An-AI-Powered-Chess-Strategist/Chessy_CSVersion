@@ -13,10 +13,12 @@ def board_evaluation(game_state):
     else:
         for row in game_state.board:
             for piece in row:
-                if piece[0] == 'w':
-                    score += piece_score[piece[1]]
-                elif piece[0] == 'b':
-                    score -= piece_score[piece[1]]
+                if str(piece) == "--":
+                    continue
+                elif piece.is_white:
+                    score += piece_score[str(piece)]
+                else:
+                    score -= piece_score[str(piece)]
 
         score = -turn_multiplier * score
 

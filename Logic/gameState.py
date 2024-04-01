@@ -52,7 +52,7 @@ class GameState:
         move.piece_moved.piece_moved()
 
         # check to move kings
-        if move.piece_moved.get_type() == "K":
+        if move.piece_moved.get_type()[1] == "K":
             if move.piece_moved.is_white:
                 self.white_king_location = (move.end_row, move.end_col)
             else:
@@ -86,10 +86,8 @@ class GameState:
 
         return valid_moves
 
-
     def get_kings_location(self):
         return self.white_king_location if self.white_to_move else self.black_king_location
-
 
     def get_valid_moves_advanced(self):
         pinned_pieces = []

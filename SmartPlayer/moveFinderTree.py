@@ -91,6 +91,7 @@ class MoveFinderTree:
     #         return max_score
 
     def find_next_best_move(self, game_state: GameState) -> Move:
+        print(game_state.white_to_move)
         if self.is_leaf():
             return board_evaluation(game_state)
         if self.is_root():
