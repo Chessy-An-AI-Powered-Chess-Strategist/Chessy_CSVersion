@@ -5,10 +5,19 @@ from .void import Void
 
 
 class King(ChessPiece):
+    """
+    A representation of a King Chess piece in python
+    """
     def __init__(self, is_white: bool, piece_symbol: str = "K"):
+        """
+        Constructor to initialize new King Chess piece
+        """
         super().__init__(is_white, piece_symbol)
 
     def get_moves(self, board, start, moves, pinned_pieces):
+        """
+        A function that determines all possible legal moves for the King on the chessboard.
+        """
         print("King get moves")
 
         row, col = start
@@ -61,7 +70,9 @@ class King(ChessPiece):
         # ToDo: Complete implementation of castling
 
     def is_check(self, board, start):
-
+        """
+        A function that returns if the King is in check for the given player
+        """
         row, col = start
 
         row_moves = (-1, -1, -1, 0, 0, 1, 1, 1)
@@ -125,7 +136,9 @@ class King(ChessPiece):
         return False
 
     def get_pinned_pieces(self, board, start):
-
+        """
+        A function that returns the pinned pieces on the baord for the given plqyer
+        """
         pinned_pieces = []
 
         row, col = start
@@ -169,6 +182,9 @@ class King(ChessPiece):
                     break
 
     def get_checks(self, board, start, pinned_pieces):
+        """
+        A function identifies all potential checks to the King's position on the chessboard.
+        """
         checks = []
         row, col = start
 

@@ -74,7 +74,6 @@ class GameState:
         """
         A function that takes in a move object and makes a move on a chessboard.
         (We are assuming all the moves given to this function are always valid)
-        (Will not work with castle, en-passant, pawn promotion)
         """
         self.board[move.start_row][move.start_col] = "--"
         self.board[move.end_row][move.end_col] = move.piece_moved
@@ -182,7 +181,7 @@ class GameState:
                     self.currentCastlingRight.bqs = False
                 elif move.start_col == 7:  # right rook
                     self.currentCastlingRight.bks = False
-            # undoing enpessant move
+            # undoing enpassant move
             if move.is_enpessant_move:
                 self.board[move.end_row][move.end_col] = '--'
                 self.board[move.start_row][move.end_col] = move.piece_captured

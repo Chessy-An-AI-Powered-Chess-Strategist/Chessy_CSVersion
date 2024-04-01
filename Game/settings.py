@@ -27,6 +27,9 @@ def load_images():
 
 
 def load_sounds():
+    """
+    A function that loads in the sounds
+    """
     p.mixer.init()
     """
     A function that initializes a global dictionary of the sounds

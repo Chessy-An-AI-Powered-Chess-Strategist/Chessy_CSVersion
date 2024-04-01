@@ -11,11 +11,14 @@ p.init()
 
 
 # define player states
-is_player_white_human = False
-is_player_black_human = False
+is_player_white_human = True
+is_player_black_human = True
 
 
 def main():
+    """
+    Main function to run the chess game.
+    """
     graphics = GraphicsUserInterface(gui_settings)
     game_state = GameState()
 

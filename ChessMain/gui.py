@@ -1,8 +1,9 @@
+
 import pygame as p
+
 """
 Set Up Settings for the GUI
 """
-
 gui_settings = {
     "WIDTH": 512,
     "HEIGHT": 512,

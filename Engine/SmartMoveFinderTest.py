@@ -4,11 +4,19 @@ piece_score = {"K": 0, "Q": 9, "R": 5, "B": 3, "N": 3, "p": 1}
 CHECKMATE = 1000
 STALEMATE = 0
 
+
 def findRandomMove(validMoves):
+    """
+    A function that returns a random move in a list of valid moves
+    """
     # print('Random move.......')
     return validMoves[random.randint(0, len(validMoves)-1)]
 
+
 def findBestMove(gs, validMoves):
+    """
+    A function that returns the best move in a list of valid moves
+    """
     turn_multiplier = 1 if gs.white_to_move else -1
     opponent_min_max_score = -CHECKMATE
     best_player_move = None
@@ -32,24 +40,26 @@ def findBestMove(gs, validMoves):
                 opponent_min_max_score = score
                 best_player_move = player_move
 
-
         # if gs.is_checkmate:
         #     score = CHECKMATE
         # elif gs.is_stalemate:
         #     score = STALEMATE
         # else:
-            score = turn_multiplier * board_evaluation(gs)
-
-        gs.undo_move()
-
-        if score > opponent_min_max_score:
-            opponent_min_max_score = score
-            best_player_move = player_move
+        #     score = turn_multiplier * board_evaluation(gs)
+        #
+        # gs.undo_move()
+        #
+        # if score > opponent_min_max_score:
+        #     opponent_min_max_score = score
+        #     best_player_move = player_move
 
     return best_player_move
 
 
 def board_evaluation(games_state):
+    """
+    A function that evaluates the position for a player at the current game_state
+    """
     score = 0
     for row in games_state.board:
         for piece in row:
@@ -65,6 +75,9 @@ def board_evaluation(games_state):
 
 
 def minimax_non_recursive(gs, valid_moves):
+    """
+    a non-recursive implementation of the minimax algorithm
+    """
     turn_multiplier = 1 if gs.white_to_move else -1
     opponent_min_max_score = CHECKMATE
     best_player_move = None

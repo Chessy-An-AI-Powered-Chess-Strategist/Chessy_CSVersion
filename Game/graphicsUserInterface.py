@@ -5,7 +5,7 @@ from Logic.pieces import Void
 
 class GraphicsUserInterface:
     """
-    This class is responsible for the graphics of the game.
+    A class that is responsible for the graphics of the game
     """
 
     def __init__(self, settings: dict):
@@ -65,6 +65,9 @@ class GraphicsUserInterface:
                                                  self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
 
     def _highlight_squares(self, game_state):
+        """
+        A function that highlights the squares at the current game state
+        """
         if self.sq_selected != ():
             r, c = self.sq_selected[0], self.sq_selected[1]
             if game_state.board[r][c].is_white == game_state.white_to_move:  # sq_selected is a piece that can be moved
@@ -180,7 +183,7 @@ class GraphicsUserInterface:
 
     def _undo_move(self, game_state):
         """
-        A function that undoes a move in the game.
+        A function that undoes a move in the game and draws the changes to the board.
         """
         game_state.undo_move()
         self.draw_game_state(game_state)

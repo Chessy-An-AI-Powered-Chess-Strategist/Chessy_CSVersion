@@ -179,6 +179,9 @@ def main():
 
 
 def draw_game_state(screen, gs, sq_selected=()):
+    """
+    A function that draws the current state of the board to the screen
+    """
     draw_board(screen)
     # ToDo: add in piece highlighting or move suggestions
     highlight_squares(screen, gs, gs.get_valid_moves_video(), sq_selected)
@@ -186,6 +189,9 @@ def draw_game_state(screen, gs, sq_selected=()):
 
 
 def highlight_squares(screen, gs, valid_moves, sq_selected):
+    """
+    A function that highlights the given square on the screen
+    """
     if sq_selected != ():
         r, c = sq_selected
         if gs.board[r][c][0] == ("w" if gs.white_to_move else "b"):  # sq_selected is a piece that can be moved
@@ -200,6 +206,9 @@ def highlight_squares(screen, gs, valid_moves, sq_selected):
 
 
 def draw_board(screen):
+    """
+    A function that draws the board to the screen
+    """
     colors = [p.Color("white"), p.Color("light blue")]
     for r in range(gui_settings["DIMENSION"]):
         for c in range(gui_settings["DIMENSION"]):
@@ -208,6 +217,9 @@ def draw_board(screen):
 
 
 def draw_pieces(screen, board):
+    """
+    A function that draws the pieces onto the board
+    """
     for r in range(gui_settings["DIMENSION"]):
         for c in range(gui_settings["DIMENSION"]):
             piece = board[r][c]
@@ -216,6 +228,9 @@ def draw_pieces(screen, board):
 
 
 def animate_move(move, screen, board, clock):
+    """
+    A function that animates a given move
+    """
     delta_row = move.end_row - move.start_row
     delta_col = move.end_col - move.start_col
 
@@ -240,7 +255,11 @@ def animate_move(move, screen, board, clock):
         p.display.flip()
         clock.tick(60)
 
+
 def draw_text(screen, text):
+    """
+    A function that draws text onto the screen
+    """
     font = p.font.SysFont("Helvitca", 32, True, False)
     text_object = font.render(text, 0, p.Color("Black"))
     text_location = p.Rect(0, 0, gui_settings["WIDTH"], gui_settings["HEIGHT"]).move(gui_settings["WIDTH"]/2 - text_object.get_width()/2, gui_settings["HEIGHT"]/2 - text_object.get_height()/2)
