@@ -39,9 +39,9 @@ class Bishop(ChessPiece):
                     if not is_pin or pin_direction == d or pin_direction == (-d[0], -d[1]):
                         end_piece = board[end_row][end_col]
 
-                        if end_piece == "--":  # empty space
+                        if str(end_piece) == "--":  # empty space
                             moves.append(Move((row, col), (end_row, end_col), board))
-                        elif end_piece[0].is_white != self.is_white:  # enemy piece
+                        elif end_piece.is_white != self.is_white:  # enemy piece
                             # Capture the piece
                             moves.append(Move((row, col), (end_row, end_col), board, True))
                             break
