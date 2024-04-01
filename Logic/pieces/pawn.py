@@ -14,10 +14,7 @@ class Pawn(ChessPiece):
         """
         row, col = start
 
-        if self.is_white:
-            direction = -1
-        else:
-            direction = 1
+        direction = -1 if self.is_white else 1
 
         if self in pinned_pieces:
             return
@@ -44,7 +41,7 @@ class Pawn(ChessPiece):
             # check for enemy pieces for capture on the left
             if 0 <= col - 1 < 8 and board[row + direction][col - 1].is_white != self.is_white:
 
-                # don't append if its an empty square
+                # don't append if it's an empty square
                 if not (board[row + direction][col - 1].is_white is None):
                     moves.append(Move(start, (row + direction, col - 1), board, is_capture=True,
                                       is_pawn_promotion=self.is_pawn_promotion))

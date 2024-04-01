@@ -28,14 +28,18 @@ class GameState:
         self.is_checkmate = False
         self.in_check = False
 
+        self.pinned_pieces = []
+
     def make_move(self, move: Move):
-        self.board[move.start_row][move.start_col] = Void()
+
+
         self.board[move.end_row][move.end_col] = move.piece_moved
+        self.board[move.start_row][move.start_col] = Void()
         self.move_log.append(move)
         self.white_to_move = not self.white_to_move
 
         # record moving form piece
-        move.piece_moved.piece_moved_from_original_position()
+        move.piece_moved.piece_moved()
 
     def undo_move(self):
         if len(self.move_log) == 0:
@@ -44,7 +48,9 @@ class GameState:
         move = self.move_log.pop()
         self.board[move.start_row][move.start_col] = move.piece_moved
         self.board[move.end_row][move.end_col] = move.piece_captured
+        move.piece_moved.revert_move()
         self.white_to_move = not self.white_to_move
+
 
 
     def get_valid_moves(self):

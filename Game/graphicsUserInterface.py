@@ -24,6 +24,7 @@ class GraphicsUserInterface:
 
         # play the start sound
         self._play_sound("game_start")
+        self.display_selected_highlights = False
 
     def draw_game_state(self, game_state):
         """
@@ -71,7 +72,12 @@ class GraphicsUserInterface:
                 s.set_alpha(100)  # transparency value
                 s.fill(pygame.Color("blue"))
                 self.screen.blit(s, (c * self.settings["SQ_SIZE"], r * self.settings["SQ_SIZE"]))
-                for move in game_state.get_valid_moves():
+
+                if not self.display_selected_highlights:
+                    self.valid_moves_for_highlights = game_state.get_valid_moves()
+                    self.display_selected_highlights = True
+
+                for move in self.valid_moves_for_highlights:
                     if move.start_row == r and move.start_col == c:
                         if move.is_capture:
                             s.fill(pygame.Color("red"))  # change color to red if the move is a capture move
@@ -111,8 +117,10 @@ class GraphicsUserInterface:
                     # deselect
                     self.sq_selected = ()
                     self.player_clicks = []
+                    self.display_selected_highlights = False
                 else:
                     # select
+                    self.display_selected_highlights = False
                     self.sq_selected = (row, col)
                     self.player_clicks.append(self.sq_selected)
 
@@ -132,11 +140,13 @@ class GraphicsUserInterface:
         """
         self.valid_moves = game_state.get_valid_moves()
 
-        # print(move_object)
+        print("move object", move_object)
         for i in range(len(self.valid_moves)):
-            print(move_object)
+
             # print("i:", self.valid_moves[i])
             if str(move_object) == str(self.valid_moves[i]):
+                print("valid_move:", self.valid_moves[i])
+
                 move_object.is_capture = self.valid_moves[i].is_capture
 
                 # print(self.valid_moves[i])
@@ -158,6 +168,7 @@ class GraphicsUserInterface:
 
                 # animate move
                 self._animate_move(game_state, self.valid_moves[i])
+                print(game_state.board)
 
                 # display the move
                 self.draw_game_state(game_state)
@@ -200,9 +211,12 @@ class GraphicsUserInterface:
 
             # print(self.settings["IMAGES"])
             # draw moving piece
-            self.screen.blit(self.settings["IMAGES"][move.piece_moved.get_type()],
-                             pygame.Rect(int(c * self.settings["SQ_SIZE"]), int(r * self.settings["SQ_SIZE"]),
-                                         self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
+
+            if str(move.piece_moved) != "--":
+
+                self.screen.blit(self.settings["IMAGES"][move.piece_moved.get_type()],
+                                    pygame.Rect(int(c * self.settings["SQ_SIZE"]), int(r * self.settings["SQ_SIZE"]),
+                                                 self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
             pygame.display.flip()
             self.clock.tick(60)
 
