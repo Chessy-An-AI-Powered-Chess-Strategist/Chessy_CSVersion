@@ -47,49 +47,63 @@ class MoveFinderTree:
                 copy_of_game_state.make_move(move._move)
                 move.add_next_possible_moves(copy_of_game_state)
 
-    def find_next_best_move(self, game_state):
-        # Assert statement
-        # assert self._is_whites_move is not game_state.white_to_move
+    # def find_next_best_move(self, game_state):
+    #     # Assert statement
+    #     # assert self._is_whites_move is not game_state.white_to_move
+    #
+    #     # Actual recursive code
+    #     if self.is_leaf():
+    #         return board_evaluation(game_state)  # Compute board_evaluation algorithm
+    #
+    #     elif self.is_root():
+    #         best_move, max_score = None, -1000
+    #         copy_of_game_state = copy.copy(game_state)
+    #
+    #         for next_possible_move in self._next_valid_moves:
+    #
+    #             copy_of_game_state.make_move(next_possible_move._move)
+    #             print("after_move: ", copy_of_game_state.white_to_move)
+    #
+    #             score = next_possible_move.find_next_best_move(copy_of_game_state)
+    #
+    #             if score > max_score:
+    #                 max_score, best_move = score, next_possible_move._move
+    #
+    #             copy_of_game_state.undo_move()
+    #
+    #         return best_move
+    #
+    #     else:
+    #         best_move, max_score = None, -1000
+    #         copy_of_game_state = copy.copy(game_state)
+    #
+    #         for next_possible_move in self._next_valid_moves:
+    #
+    #             copy_of_game_state.make_move(next_possible_move._move)
+    #
+    #             score = next_possible_move.find_next_best_move(copy_of_game_state)
+    #
+    #             if score > max_score:
+    #                 max_score = score
+    #
+    #             copy_of_game_state.undo_move()
+    #
+    #         return max_score
 
-        # Actual recursive code
+    def find_next_best_move(self, game_state: GameState) -> Move:
         if self.is_leaf():
-            return board_evaluation(game_state)  # Compute board_evaluation algorithm
-
-        elif self.is_root():
-            best_move, max_score = None, -1000
-            copy_of_game_state = copy.copy(game_state)
-
-            for next_possible_move in self._next_valid_moves:
-
-                copy_of_game_state.make_move(next_possible_move._move)
-                print("after_move: ", copy_of_game_state.white_to_move)
-
-                score = next_possible_move.find_next_best_move(copy_of_game_state)
-
-                if score > max_score:
-                    max_score, best_move = score, next_possible_move._move
-
-                copy_of_game_state.undo_move()
-
-            return best_move
-
+            return board_evaluation(game_state)
+        if self.is_root():
+            pass
         else:
             best_move, max_score = None, -1000
-            copy_of_game_state = copy.copy(game_state)
-
-            for next_possible_move in self._next_valid_moves:
-
-                copy_of_game_state.make_move(next_possible_move._move)
-
-                score = next_possible_move.find_next_best_move(copy_of_game_state)
-
+            for node in self._next_valid_moves:
+                copy_of_game_state_with_move = copy.copy(game_state.make_move(node._move))
+                score = node.find_next_best_move(copy_of_game_state_with_move)
                 if score > max_score:
-                    max_score = score
+                    max_score, best_move = score, node._move
 
-                copy_of_game_state.undo_move()
-
-            return max_score
-
+        return best_move
 
     def print_tree(self, indent=0):
         print(' ' * indent + str(self._move), self._is_whites_move)
@@ -147,9 +161,15 @@ class MoveFinderTree:
         fig.update_yaxes(showgrid=False, zeroline=False, visible=False)
         fig.show()
 
+    def move_down(self, move: Move, game_state: GameState):
+        """move down the tree"""
+        for node in self._next_valid_moves:
+            if node._move == move:
+                self._move = None
+                if node.is_leaf():
+                    node.add_next_possible_moves(game_state)
+                else:
+                    self._next_valid_moves = node._next_valid_moves
 
-
-
-
-
-
+                self._is_whites_move = node._is_whites_move
+                break

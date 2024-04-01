@@ -7,12 +7,11 @@ from Engine.gameState import GameState
 def run():
     # from Game import game
     main()
-    # game_state = GameState()
+    game_state = GameState()
     # print(type(game_state))
-    # tree = MoveFinderTree(game_state, None)
-    # tree.draw_tree()
+    tree = MoveFinderTree(game_state, None)
     #
-    # print(tree.find_next_best_move(game_state))
+    print(tree.find_next_best_move(game_state))
 
 
 if __name__ == '__main__':
