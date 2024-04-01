@@ -47,6 +47,17 @@ class King(ChessPiece):
                     board[row][col] = board[end_row][end_col]
                     board[end_row][end_col] = end_piece
 
+
+        # check for castling
+        rooks = [board[row_1][col_1] for col_1 in [0, 7] for row_1 in [0, 7] if board[row_1][col_1].is_white == self.is_white and board[row_1][col_1].get_type() == 'R' and board[row_1][col_1].is_first_move]
+        king = board[row][col]
+
+        if king.is_first_move:
+            return
+
+        # ToDo: Complete implementation of castling
+        
+
     def is_check(self, board, start):
 
         row, col = start
@@ -97,6 +108,20 @@ class King(ChessPiece):
                     break
 
                 # ToDo: Implement Knight checks
+                # Check for knight checks
+                knight_moves = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
+                for m in knight_moves:
+                    end_row = row + m[0]
+                    end_col = col + m[1]
+
+                    if 0 <= end_row < 8 and 0 <= end_col < 8:
+                        end_piece = board[end_row][end_col]
+
+                        if end_piece.is_white != self.is_white[0] and end_piece.get_type() == 'N':
+                            return True
+
+        return False
+
 
     def get_pinned_pieces(self, board, start):
 

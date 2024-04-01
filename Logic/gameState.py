@@ -31,8 +31,6 @@ class GameState:
         self.pinned_pieces = []
 
     def make_move(self, move: Move):
-
-
         self.board[move.end_row][move.end_col] = move.piece_moved
         self.board[move.start_row][move.start_col] = Void()
         self.move_log.append(move)
@@ -52,18 +50,19 @@ class GameState:
         self.white_to_move = not self.white_to_move
 
 
-
     def get_valid_moves(self):
-        self.pinned_pieces = []
-        self.valid_moves = []
+        pinned_pieces = []
+        valid_moves = []
 
         for row in range(8):
             for col in range(8):
                 piece = self.board[row][col]
                 if piece.is_white == self.white_to_move:
-                    piece.get_moves(self.board, (row, col), self.valid_moves, self.pinned_pieces)
+                    piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
 
-        return self.valid_moves
+        # ToDo: Implement the logic for only valid moves
+
+        return valid_moves
 
 
 
