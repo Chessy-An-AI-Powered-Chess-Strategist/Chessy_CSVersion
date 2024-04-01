@@ -134,7 +134,7 @@ class King(ChessPiece):
 
         assert len(row_moves) == len(col_moves)
 
-        color = -1 if self.is_white else 1
+        # color = -1 if self.is_white else 1
 
         # loop though all the directions
         for j in range(len(row_moves)):

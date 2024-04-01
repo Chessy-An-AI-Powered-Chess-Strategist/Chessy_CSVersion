@@ -41,7 +41,6 @@ class GameState:
         self.board[move.end_row][move.end_col] = move.piece_moved
         self.board[move.start_row][move.start_col] = Void()
         self.move_log.append(move)
-        
 
         self.white_to_move = not self.white_to_move
 
@@ -58,6 +57,9 @@ class GameState:
         move.piece_moved.revert_move()
         self.white_to_move = not self.white_to_move
 
+        # check to revert pawn promotion
+        if move.is_pawn_promotion:
+            self.board[move.start_row][move.start_col] = Pawn(move.piece_moved.is_white)
 
     def get_valid_moves(self):
         pinned_pieces = []
