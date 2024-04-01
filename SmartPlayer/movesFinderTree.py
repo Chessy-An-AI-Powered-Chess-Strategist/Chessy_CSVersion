@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-# import copy
-# import networkx as nx
-# from plotly.graph_objs import Scatter, Figure
-# import matplotlib.pyplot as plt
-# from pyvis.network import Network
+import copy
+import networkx as nx
+from plotly.graph_objs import Scatter, Figure
+import matplotlib.pyplot as plt
+from pyvis.network import Network
 
 from Engine import Move, GameState
 from .boardAlgorithms import board_evaluation

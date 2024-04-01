@@ -5,9 +5,6 @@ from Engine.gameState import GameState
 
 
 def run():
-    """
-    makes a call to main function
-    """
     # from Game import game
     main()
     # game_state = GameState()

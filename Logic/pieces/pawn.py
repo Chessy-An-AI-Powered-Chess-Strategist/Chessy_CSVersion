@@ -4,9 +4,6 @@ from ..move import Move
 
 
 class Pawn(ChessPiece):
-    """
-    A representation of a pawn in Python
-    """
     def __init__(self, is_white: bool, piece_symbol: str = "p"):
         super().__init__(is_white, piece_symbol)
         self.is_pawn_promotion = False
