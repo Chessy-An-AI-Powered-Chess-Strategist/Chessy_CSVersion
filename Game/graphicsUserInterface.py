@@ -169,6 +169,7 @@ class GraphicsUserInterface:
                 # animate move
                 self._animate_move(game_state, self.valid_moves[i])
                 print(game_state.board)
+                print(self.valid_moves_for_highlights)
 
                 # display the move
                 self.draw_game_state(game_state)

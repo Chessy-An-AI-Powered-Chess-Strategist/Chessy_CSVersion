@@ -38,15 +38,18 @@ class King(ChessPiece):
                     board[row][col] = Void()
 
                     if not self.is_check(board, new_king_location):
+                        # revert the move
+                        board[row][col] = board[end_row][end_col]
+                        board[end_row][end_col] = end_piece
+
                         if str(end_piece) == '--':
                             moves.append(Move(start, (end_row, end_col), board))
                         else:
                             moves.append(Move(start, (end_row, end_col), board, is_capture=True))
-
-                    # revert the move
-                    board[row][col] = board[end_row][end_col]
-                    board[end_row][end_col] = end_piece
-
+                    else:
+                        # revert the move
+                        board[row][col] = board[end_row][end_col]
+                        board[end_row][end_col] = end_piece
 
         # check for castling
         rooks = [board[row_1][col_1] for col_1 in [0, 7] for row_1 in [0, 7] if board[row_1][col_1].is_white == self.is_white and board[row_1][col_1].get_type() == 'R' and board[row_1][col_1].is_first_move]
@@ -117,11 +120,10 @@ class King(ChessPiece):
                     if 0 <= end_row < 8 and 0 <= end_col < 8:
                         end_piece = board[end_row][end_col]
 
-                        if end_piece.is_white != self.is_white[0] and end_piece.get_type() == 'N':
+                        if end_piece.is_white != self.is_white and end_piece.get_type() == 'N':
                             return True
 
         return False
-
 
     def get_pinned_pieces(self, board, start):
 

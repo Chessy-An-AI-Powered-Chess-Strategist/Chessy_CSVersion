@@ -32,6 +32,8 @@ class GameState:
 
     def make_move(self, move: Move):
         print("Making move")
+        print(move.piece_moved)
+        print(move.piece_captured)
 
         # check for pawn promotion
         if move.piece_moved.get_type()[1] == "p" and (move.end_row == 0 or move.end_row == 7):
