@@ -149,8 +149,6 @@ class GameState:
                     if piece.is_white == self.white_to_move:
                         piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
 
-
-
         if len(valid_moves) == 0:
             if king_piece.is_check(self.board, kings_location):
                 self.is_checkmate = True

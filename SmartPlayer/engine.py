@@ -1,4 +1,4 @@
-from .movesFinderTree import MoveFinderTree
+from .moveFinderTree import MoveFinderTree
 import random
 
 class Engine:

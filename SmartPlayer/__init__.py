@@ -1,5 +1,5 @@
 
-from .movesFinderTree import MoveFinderTree
+from .moveFinderTree import MoveFinderTree
 from .engine import Engine
 
 
