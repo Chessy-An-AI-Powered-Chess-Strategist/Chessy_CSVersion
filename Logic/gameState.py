@@ -30,14 +30,14 @@ class GameState:
 
         self.pinned_pieces = []
 
+        self.white_king_location = (7, 4)
+        self.black_king_location = (0, 4)
+
     def make_move(self, move: Move):
-        print("Making move")
-        print(move.piece_moved)
-        print(move.piece_captured)
+
 
         # check for pawn promotion
         if move.piece_moved.get_type()[1] == "p" and (move.end_row == 0 or move.end_row == 7):
-            print("Pawn promotion")
             move.piece_moved = Queen(move.piece_moved.is_white)
 
         self.board[move.end_row][move.end_col] = move.piece_moved
@@ -48,6 +48,13 @@ class GameState:
 
         # record moving form piece
         move.piece_moved.piece_moved()
+
+        # check to move kings
+        if move.piece_moved.get_type() == "K":
+            if move.piece_moved.is_white:
+                self.white_king_location = (move.end_row, move.end_col)
+            else:
+                self.black_king_location = (move.end_row, move.end_col)
 
     def undo_move(self):
         if len(self.move_log) == 0:
@@ -76,6 +83,76 @@ class GameState:
         # ToDo: Implement the logic for only valid moves
 
         return valid_moves
+
+
+    def get_kings_location(self):
+        return self.white_king_location if self.white_to_move else self.black_king_location
+
+
+    def get_valid_moves_advanced(self):
+        pinned_pieces = []
+        valid_moves = []
+
+        kings_location = self.get_kings_location()
+
+        print("Kings location:", self.board[kings_location[0]][kings_location[1]])
+
+        assert self.board[kings_location[0]][kings_location[1]].get_type()[1] == "K"
+
+        king_piece = self.board[kings_location[0]][kings_location[1]]
+
+
+        # if the king is in check
+        if king_piece.is_check(self.board, kings_location):
+            checks = king_piece.get_checks(self.board, kings_location)
+
+            if len(checks) == 1:
+                piece_checking = checks[0]
+                check_row, check_col = piece_checking[0], piece_checking[1]
+
+                # collect teh list of all moves
+                for row in range(8):
+                    for col in range(8):
+                        piece = self.board[row][col]
+                        if piece.is_white == self.white_to_move:
+                            piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
+
+                valid_squares = []  # squares that pieces can move to
+
+                if str(piece_checking[1]) == 'N':
+                    valid_squares = [(check_row, check_col)]
+                else:
+                    for i in range(1, 8):
+                        valid_square = (kings_location[0] + piece_checking[2] * i, kings_location[1] + piece_checking[3] * i)
+                        valid_squares.append(valid_square)
+                        if valid_square[0] == check_row and valid_square[1] == check_col:  # capture the piece
+                            break
+
+                print(f"Valid moves:", [str(move) for move in valid_moves])
+
+                # get rid of any moves that don't block the check or move the king
+                for i in range(len(valid_moves) - 1, -1, -1):
+                    if valid_moves[i].piece_moved[1] != 'K':  # move king to get out of check
+                        if not (valid_moves[i].end_row, valid_moves[i].end_col) in valid_squares:
+                            valid_moves.remove(valid_moves[i])
+
+
+            else:  # if its a double check
+                king_piece.get_moves( self.board, kings_location, valid_moves, pinned_pieces)
+
+        else:
+            for row in range(8):
+                for col in range(8):
+                    piece = self.board[row][col]
+                    if piece.is_white == self.white_to_move:
+                        piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
+
+        return valid_moves
+
+
+
+
+
 
 
 

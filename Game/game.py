@@ -12,7 +12,7 @@ p.init()
 
 # define player states
 is_player_white_human = True
-is_player_black_human = True
+is_player_black_human = False
 
 
 def main():
@@ -30,11 +30,11 @@ def main():
         graphics.draw_game_state(game_state)
 
         if running and not human_turn:
-            move = smf.minimax_non_recursive(game_state, game_state.get_valid_moves())
-            move = engine.find_best_move_tree(game_state, game_state.get_valid_moves())
+            move = smf.minimax_non_recursive(game_state, game_state.get_valid_moves_advanced())
+            # move = engine.find_best_move_tree(game_state, game_state.get_valid_moves())
             if move is None:
                 print("No move found")
-                move = smf.findRandomMove(game_state.get_valid_moves())
+                move = smf.findRandomMove(game_state.get_valid_moves_advanced())
 
             graphics.make_move(game_state, move)
 

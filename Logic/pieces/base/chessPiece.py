@@ -30,3 +30,6 @@ class ChessPiece:
 
         if self.num_of_moves_made == 0:
             self.is_first_move = True
+
+    def is_check(self, board, kings_location):
+        raise NotImplementedError("This method must be implemented by a subclass")

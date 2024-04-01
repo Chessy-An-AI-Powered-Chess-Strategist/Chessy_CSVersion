@@ -74,7 +74,7 @@ class GraphicsUserInterface:
                 self.screen.blit(s, (c * self.settings["SQ_SIZE"], r * self.settings["SQ_SIZE"]))
 
                 if not self.display_selected_highlights:
-                    self.valid_moves_for_highlights = game_state.get_valid_moves()
+                    self.valid_moves_for_highlights = game_state.get_valid_moves_advanced()
                     self.display_selected_highlights = True
 
                 for move in self.valid_moves_for_highlights:
@@ -138,7 +138,7 @@ class GraphicsUserInterface:
         """
         A function that makes a move in the game.
         """
-        self.valid_moves = game_state.get_valid_moves()
+        self.valid_moves = game_state.get_valid_moves_advanced()
 
         print("move object", move_object)
         for i in range(len(self.valid_moves)):
