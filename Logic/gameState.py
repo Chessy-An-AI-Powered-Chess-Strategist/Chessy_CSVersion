@@ -31,9 +31,18 @@ class GameState:
         self.pinned_pieces = []
 
     def make_move(self, move: Move):
+        print("Making move")
+
+        # check for pawn promotion
+        if move.piece_moved.get_type()[1] == "p" and (move.end_row == 0 or move.end_row == 7):
+            print("Pawn promotion")
+            move.piece_moved = Queen(move.piece_moved.is_white)
+
         self.board[move.end_row][move.end_col] = move.piece_moved
         self.board[move.start_row][move.start_col] = Void()
         self.move_log.append(move)
+        
+
         self.white_to_move = not self.white_to_move
 
         # record moving form piece

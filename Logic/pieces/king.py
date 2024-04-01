@@ -56,7 +56,7 @@ class King(ChessPiece):
             return
 
         # ToDo: Complete implementation of castling
-        
+
 
     def is_check(self, board, start):
 
