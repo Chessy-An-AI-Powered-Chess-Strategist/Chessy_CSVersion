@@ -26,6 +26,8 @@ class GameState:
 
         self.white_to_move = True
         self.is_checkmate = False
+        self.is_stalemate = False
+
         self.in_check = False
 
         self.pinned_pieces = []
@@ -146,6 +148,16 @@ class GameState:
                     piece = self.board[row][col]
                     if piece.is_white == self.white_to_move:
                         piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
+
+
+
+        if len(valid_moves) == 0:
+            if king_piece.is_check(self.board, kings_location):
+                self.is_checkmate = True
+                print("Checkmate")
+            else:
+                self.is_stalemate = True
+                print("Stalemate")
 
         return valid_moves
 

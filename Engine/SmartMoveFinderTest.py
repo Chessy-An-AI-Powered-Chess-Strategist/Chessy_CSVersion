@@ -53,10 +53,13 @@ def board_evaluation(games_state):
     score = 0
     for row in games_state.board:
         for piece in row:
-            if piece[0] == 'w':
-                score += piece_score[piece[1]]
-            elif piece[0] == 'b':
-                score -= piece_score[piece[1]]
+            if piece.is_white:
+                score += piece_score[piece.get_type()[1]]
+
+            elif str(piece) == '--':
+                continue
+            else:
+                score -= piece_score[piece.get_type()[1]]
 
     return score
 
