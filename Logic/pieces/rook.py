@@ -34,10 +34,10 @@ class Rook(ChessPiece):
                     end_piece = board[end_row][end_col]
 
                     if end_piece == "--":  # empty space
-                        moves.append(Move((row, col), (end_row, end_col), self.board))
+                        moves.append(Move((row, col), (end_row, end_col), board))
                     elif end_piece[0] == enemy_color:  # enemy piece
                         # Capture the piece
-                        moves.append(Move((row, col), (end_row, end_col), self.board, True))
+                        moves.append(Move((row, col), (end_row, end_col), board, True))
                         break
                     else:
                         break
