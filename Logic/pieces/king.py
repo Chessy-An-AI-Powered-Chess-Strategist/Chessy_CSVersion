@@ -1,7 +1,7 @@
 from .base.chessPiece import ChessPiece
 from ..move import Move
 from .void import Void
-from Engine.gameState import CastleRights
+# from Engine.gameState import CastleRights
 
 
 class King(ChessPiece):

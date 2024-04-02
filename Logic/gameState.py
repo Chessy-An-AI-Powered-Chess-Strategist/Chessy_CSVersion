@@ -77,8 +77,7 @@ class GameState:
                 self.white_king_location = (move.end_row, move.end_col)
             else:
                 self.black_king_location = (move.end_row, move.end_col)
-
-<<<<<<< Updated upstream
+                
         # check if the move is castling
         if move.is_castle_move:
             if move.end_col - move.start_col == 2:  # right side castle
@@ -92,25 +91,6 @@ class GameState:
                 # move rook to the right of the king
                 self.board[move.end_row][move.end_col + 1] = self.board[rook_location[0]][rook_location[1]]
                 self.board[rook_location[0]][rook_location[1]] = Void()
-=======
-        # check for castling rights
-        if move.piece_moved.get_type()[1] == 'K':
-            if move.piece_moved.is_white:
-                self.white_can_castle = {'kingside': False, 'queenside': False}
-            else:
-                self.black_can_castle = {'kingside': False, 'queenside': False}
-        if move.piece_moved.get_type()[1] == 'R':
-            if move.start_col == 0:
-                if move.piece_moved.is_white:
-                    self.white_can_castle['queenside'] = False
-                else:
-                    self.black_can_castle['queenside'] = False
-            elif move.start_col == 7:
-                if move.piece_moved.is_white:
-                    self.white_can_castle['kingside'] = False
-                else:
-                    self.black_can_castle['kingside'] = False
->>>>>>> Stashed changes
 
     def undo_move(self):
         if len(self.move_log) == 0:
