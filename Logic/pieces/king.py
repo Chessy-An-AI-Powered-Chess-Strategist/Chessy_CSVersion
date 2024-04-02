@@ -18,7 +18,7 @@ class King(ChessPiece):
         """
         A function that determines all possible legal moves for the King on the chessboard.
         """
-        print("King get moves")
+        # print("King get moves")
 
         row, col = start
 
@@ -129,7 +129,7 @@ class King(ChessPiece):
                                     is_a_queen_attacking or is_there_a_king_there)
 
                         if is_check:
-                            print("King is in check")
+                            # print("King is in check")
                             return True
                 else:
                     break
@@ -246,7 +246,7 @@ class King(ChessPiece):
                                     is_a_queen_attacking or is_there_a_king_there)
 
                         if is_check:
-                            print("King is in check")
+                            # print("King is in check")
                             checks.append((end_piece, end_row, end_col))
                 else:
                     break
@@ -285,7 +285,7 @@ class King(ChessPiece):
 
         # if the king has not moves
         not_moves_rooks = [rook for rook in all_ally_rooks if rook[0].is_first_move]
-        print("Not moved rooks", not_moves_rooks)
+        # print("Not moved rooks", not_moves_rooks)
 
         # for all the available rooks
         for rook in not_moves_rooks:
@@ -297,15 +297,15 @@ class King(ChessPiece):
 
                 for check_col in range(col + 1, rook[1][1] - 1):
                     # break if it is not empty
-                    print("Checking", row, check_col, board[row][check_col])
+                    # print("Checking", row, check_col, board[row][check_col])
                     if str(board[row][check_col]) != '--':
-                        print("Not empty for right rook")
+                        # print("Not empty for right rook")
                         eligible_move = False
                         break
 
                     # break if the king will be in check
                     if self.is_check(board, (row, check_col)):
-                        print("Not uncheck for right rook")
+                        # print("Not uncheck for right rook")
                         eligible_move = False
                         break
 
@@ -318,20 +318,20 @@ class King(ChessPiece):
                 for check_col in range(col - 1, rook[1][1] + 1, -1):
                     # break if it is not empty
                     if str(board[row][check_col]) != '--':
-                        print("Not uncheck for left rook")
+                        # print("Not uncheck for left rook")
                         eligible_move = False
                         break
 
                     # break if the king will be in check
                     if self.is_check(board, (row, check_col)):
-                        print("Not uncheck for left rook")
+                        # print("Not uncheck for left rook")
                         eligible_move = False
                         break
 
                 if eligible_move:
                     castle_moves.append(Move(start, (row, col - 3), board, is_castle_move=True))
 
-        print("Castle moves", castle_moves)
+        # print("Castle moves", castle_moves)
 
         return castle_moves
 

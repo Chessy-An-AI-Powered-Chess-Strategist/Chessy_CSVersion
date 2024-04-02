@@ -39,6 +39,8 @@ class GameState:
         self.white_king_location = (7, 4)
         self.black_king_location = (0, 4)
 
+        self.game_over = False
+
     def make_move(self, move: Move):
 
         # check for pawn promotion
@@ -127,10 +129,10 @@ class GameState:
 
         kings_location = self.get_kings_location()
 
-        print("Kings location:", self.board[kings_location[0]][kings_location[1]])
-        print("in check", self.in_check)
-        print("is checkmate", self.is_checkmate)
-        print(self.board)
+        # print("Kings location:", self.board[kings_location[0]][kings_location[1]])
+        # print("in check", self.in_check)
+        # print("is checkmate", self.is_checkmate)
+        # print(self.board)
 
         assert self.is_checkmate == False
         assert self.board[kings_location[0]][kings_location[1]].get_type()[1] == "K"
@@ -140,7 +142,9 @@ class GameState:
         # collect pinned_pieces
         pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
 
-        print(pinned_pieces)
+        # print(pinned_pieces)
+        # print("Is in check:", self.in_check)
+        # print("Is king actually in check:", king_piece.is_check(self.board, kings_location))
 
         # if the king is in check
         if king_piece.is_check(self.board, kings_location):
@@ -170,7 +174,7 @@ class GameState:
                         if valid_square[0] == check_row and valid_square[1] == check_col:  # capture the piece
                             break
 
-                print(f"Valid moves:", [str(move) for move in valid_moves])
+                # print(f"Valid moves:", [str(move) for move in valid_moves])
 
                 # get rid of any moves that don't block the check or move the king
                 for i in range(len(valid_moves) - 1, -1, -1):
@@ -208,11 +212,13 @@ class GameState:
                         piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
 
         if len(valid_moves) == 0:
+            self.game_over = True
             if king_piece.is_check(self.board, kings_location):
                 self.is_checkmate = True
                 print("Checkmate")
             else:
                 self.is_stalemate = True
+
                 print("Stalemate")
 
         return valid_moves
