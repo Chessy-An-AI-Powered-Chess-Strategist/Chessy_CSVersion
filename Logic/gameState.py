@@ -32,6 +32,10 @@ class GameState:
         # enpassant coord
         self.enpassant_coord = ()
 
+        # check for castling rights both kingside and queenside
+        self.white_can_castle = {'kingside' : True, 'queenside' : True}
+        self.black_can_castle = {'kingside' : True, 'queenside' : True}
+
         self.in_check = False
 
         self.pinned_pieces = []
@@ -63,6 +67,7 @@ class GameState:
         else:
             self.enpassant_coord = ()
 
+
         # record moving form piece
         move.piece_moved.piece_moved()
 
@@ -73,6 +78,7 @@ class GameState:
             else:
                 self.black_king_location = (move.end_row, move.end_col)
 
+<<<<<<< Updated upstream
         # check if the move is castling
         if move.is_castle_move:
             if move.end_col - move.start_col == 2:  # right side castle
@@ -86,6 +92,25 @@ class GameState:
                 # move rook to the right of the king
                 self.board[move.end_row][move.end_col + 1] = self.board[rook_location[0]][rook_location[1]]
                 self.board[rook_location[0]][rook_location[1]] = Void()
+=======
+        # check for castling rights
+        if move.piece_moved.get_type()[1] == 'K':
+            if move.piece_moved.is_white:
+                self.white_can_castle = {'kingside': False, 'queenside': False}
+            else:
+                self.black_can_castle = {'kingside': False, 'queenside': False}
+        if move.piece_moved.get_type()[1] == 'R':
+            if move.start_col == 0:
+                if move.piece_moved.is_white:
+                    self.white_can_castle['queenside'] = False
+                else:
+                    self.black_can_castle['queenside'] = False
+            elif move.start_col == 7:
+                if move.piece_moved.is_white:
+                    self.white_can_castle['kingside'] = False
+                else:
+                    self.black_can_castle['kingside'] = False
+>>>>>>> Stashed changes
 
     def undo_move(self):
         if len(self.move_log) == 0:
@@ -124,7 +149,6 @@ class GameState:
         return self.white_king_location if self.white_to_move else self.black_king_location
 
     def get_valid_moves_advanced(self):
-        pinned_pieces = []
         valid_moves = []
 
         kings_location = self.get_kings_location()
@@ -139,12 +163,18 @@ class GameState:
 
         king_piece = self.board[kings_location[0]][kings_location[1]]
 
+<<<<<<< Updated upstream
         # collect pinned_pieces
         pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
 
         # print(pinned_pieces)
         # print("Is in check:", self.in_check)
         # print("Is king actually in check:", king_piece.is_check(self.board, kings_location))
+=======
+        pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
+
+        print(pinned_pieces)
+>>>>>>> Stashed changes
 
         # if the king is in check
         if king_piece.is_check(self.board, kings_location):
@@ -210,6 +240,27 @@ class GameState:
 
                     if piece.is_white == self.white_to_move:
                         piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
+                    if piece not in pinned_pieces:
+                        # check specifically for enpassant moves
+                        if piece.get_type() == "wp" or "bp":
+                            if (row + 1, col + 1) == self.enpassant_coord:
+                                valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col + 1), board=self.board,
+                                                        is_enpassant_move=True))
+
+                            if (row + 1, col - 1) == self.enpassant_coord:
+                                valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col - 1), board=self.board,
+                                                        is_enpassant_move=True))
+
+                            if (row - 1, col + 1) == self.enpassant_coord:
+                                valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col + 1), board=self.board,
+                                                        is_enpassant_move=True))
+
+                            if (row - 1, col - 1) == self.enpassant_coord:
+                                valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col - 1), board=self.board,
+                                                        is_enpassant_move=True))
+
+                        if piece.is_white == self.white_to_move:
+                            piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
 
         if len(valid_moves) == 0:
             self.game_over = True

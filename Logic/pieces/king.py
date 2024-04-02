@@ -153,47 +153,37 @@ class King(ChessPiece):
         """
         A function that returns the pinned pieces on the baord for the given plqyer
         """
-        pinned_pieces = []
-
+        print('pinned pieces called')
         row, col = start
 
-        row_moves = (-1, -1, -1, 0, 0, 1, 1, 1)
-        col_moves = (-1, 0, 1, -1, 1, -1, 0, 1)
+        pinned_pieces = []
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1),
+                      (-1, 1)]  # 8 directions around the king
 
-        assert len(row_moves) == len(col_moves)
+        for d in directions:
+            for i in range(1, 8):  # potentially check up to 7 squares
+                end_row = row + d[0] * i
+                end_col = col + d[1] * i
 
-        # color = -1 if self.is_white else 1
-
-        # loop though all the directions
-        for j in range(len(row_moves)):
-            end_row_dir = row_moves[j]
-            end_col_dir = col_moves[j]
-
-            for i in range(1, 8):
-                end_row = row + end_row_dir * i
-                end_col = col + end_col_dir * i
-
-                # check if the end square is within the board
+                # ensure we're on the board
                 if 0 <= end_row < 8 and 0 <= end_col < 8:
-                    # collect peace on the end square
                     end_piece = board[end_row][end_col]
-                    # print(str(end_piece), end_row, end_col)
 
-                    # if peace is ally
+                    # if the piece is of the same color as the king
                     if end_piece.is_white == self.is_white:
-
-                        # if we remove the piece and replace it with void
+                        # temporarily remove the piece
+                        temp_piece = end_piece
                         board[end_row][end_col] = Void()
 
                         # check if the king is in check
-                        if self.is_check(board, start):
-                            pinned_pieces.append(end_piece)
+                        if self.is_check(board, (row, col)):
+                            print('found pinned piece')
+                            pinned_pieces.append(temp_piece)
 
-                        # revert the move
-                        board[end_row][end_col] = end_piece
+                        # put the piece back
+                        board[end_row][end_col] = temp_piece
 
-                else:
-                    break
+        return pinned_pieces
 
         return pinned_pieces
 
