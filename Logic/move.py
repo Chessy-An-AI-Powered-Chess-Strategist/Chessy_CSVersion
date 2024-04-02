@@ -28,6 +28,8 @@ class Move:
         # check for en passant move
         self.is_enpassant_move = is_enpassant_move
 
+        self.is_castle_move = is_castle_move
+
         if self.is_enpassant_move:
             self.piece_captured = pawn.Pawn(False) if self.piece_moved.get_type() == 'wp' else pawn.Pawn(True)
         #

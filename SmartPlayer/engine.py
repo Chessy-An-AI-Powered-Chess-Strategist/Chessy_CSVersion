@@ -9,6 +9,10 @@ class Engine:
         self.tree = MoveFinderTree(game_state, self, game_state.white_to_move)
         self.game_state = game_state
 
+        # make the tree for the depth we need
+        for _ in range(3):
+            self.tree.add_next_possible_moves(game_state, self)
+
     def findRandomMove(self, validMoves):
         return validMoves[random.randint(0, len(validMoves)-1)]
 

@@ -23,12 +23,6 @@ class MoveFinderTree:
         self._next_valid_moves = []
         self._is_whites_move = game_state.white_to_move
 
-        if self.is_root():
-            self._is_whites_move = False
-            for _ in range(tree_settings["DEPTH"]):
-                # create the rest
-                self.add_next_possible_moves(game_state, engine)
-
     def is_root(self):
         return self._move is None
 

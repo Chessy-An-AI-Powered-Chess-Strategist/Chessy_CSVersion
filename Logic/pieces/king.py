@@ -13,9 +13,6 @@ class King(ChessPiece):
         Constructor to initialize new King Chess piece
         """
         super().__init__(is_white, piece_symbol)
-        self.currentCastlingRight = CastleRights(True, True, True, True)
-        self.castleRightLog = [CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
-                                            self.currentCastlingRight.wqs, self.currentCastlingRight.bqs)]
 
     def get_moves(self, board, start, moves, pinned_pieces):
         """
@@ -63,20 +60,8 @@ class King(ChessPiece):
                         board[end_row][end_col] = end_piece
 
         # check for castling
-        rooks = [board[row_1][col_1] for col_1 in [0, 7] for row_1 in [0, 7] if board[row_1][col_1].is_white == self.is_white and board[row_1][col_1].get_type() == 'R' and board[row_1][col_1].is_first_move]
-        king = board[row][col]
-
-        # ToDo: Complete implementation of castling
-        if king.is_first_move:
-            # Check if castling is possible
-            for rook in rooks:
-                # Check if the squares between the king and rook are empty
-                empty_squares = [(row, col - i) for i in range(1, 4)] if rook.col < col else [(row, col + i) for i in range(1, 3)]
-                # find which of these squares is under attack
-                squares_under_attack = self.squares_under_attack(board, self.is_white)
-
-                if all(board[square[0]][square[1]].get_type() == '--' and not self.is_check(board, square) and square not in squares_under_attack for square in empty_squares):
-                    moves.append(Move(start, (row, col - 2 if rook.col < col else col + 2), board, is_castling=True))
+        for move in self.get_castle_rights(board, start):
+            moves.append(move)
 
         return moves
 
@@ -280,3 +265,80 @@ class King(ChessPiece):
                             checks.append((end_piece, end_row, end_col))
 
         return checks
+
+    def get_castle_rights(self, board, start):
+        """
+        A function that returns the current castling rights of the King
+        """
+        castle_moves = []
+
+        row, col = start  # Kings location on the board
+
+        possible_rook_locations = [(0, 0), (0, 7), (7, 0), (7, 7)]
+        all_rooks = [(board[row][col], (row, col)) for row, col in possible_rook_locations if board[row][col].get_type()[1] == 'R']
+
+        all_ally_rooks = [rook for rook in all_rooks if rook[0].is_white == self.is_white]
+
+        # Check if the King has moved
+        if not self.is_first_move:
+            return []
+
+        # if the king has not moves
+        not_moves_rooks = [rook for rook in all_ally_rooks if rook[0].is_first_move]
+        print("Not moved rooks", not_moves_rooks)
+
+        # for all the available rooks
+        for rook in not_moves_rooks:
+            # check if all the squares between them are empty
+
+            # now the move can be added
+            if rook[1][1] > col:  # right rook
+                eligible_move = True
+
+                for check_col in range(col + 1, rook[1][1] - 1):
+                    # break if it is not empty
+                    print("Checking", row, check_col, board[row][check_col])
+                    if str(board[row][check_col]) != '--':
+                        print("Not empty for right rook")
+                        eligible_move = False
+                        break
+
+                    # break if the king will be in check
+                    if self.is_check(board, (row, check_col)):
+                        print("Not uncheck for right rook")
+                        eligible_move = False
+                        break
+
+                if eligible_move:
+                    castle_moves.append(Move(start, (row, col + 2), board, is_castle_move=True))
+
+            else:  # left rook
+                eligible_move = True
+
+                for check_col in range(col - 1, rook[1][1] + 1, -1):
+                    # break if it is not empty
+                    if str(board[row][check_col]) != '--':
+                        print("Not uncheck for left rook")
+                        eligible_move = False
+                        break
+
+                    # break if the king will be in check
+                    if self.is_check(board, (row, check_col)):
+                        print("Not uncheck for left rook")
+                        eligible_move = False
+                        break
+
+                if eligible_move:
+                    castle_moves.append(Move(start, (row, col - 3), board, is_castle_move=True))
+
+        print("Castle moves", castle_moves)
+
+        return castle_moves
+
+
+
+
+
+
+
+
