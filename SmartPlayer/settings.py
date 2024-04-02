@@ -1,6 +1,6 @@
 
 
 tree_settings = {
-    "DEPTH": 7,
+    "DEPTH": 2,
 
 }

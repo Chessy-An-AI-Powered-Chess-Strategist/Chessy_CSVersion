@@ -84,6 +84,9 @@ class GraphicsUserInterface:
                     if move.start_row == r and move.start_col == c:
                         if move.is_capture:
                             s.fill(pygame.Color("red"))  # change color to red if the move is a capture move
+                        elif move.is_enpassant_move:
+                            print("there is an enpassant move on the board")
+                            s.fill(pygame.Color("yellow"))
                         else:
                             s.fill(pygame.Color("yellow"))
                         self.screen.blit(s, (
@@ -137,7 +140,7 @@ class GraphicsUserInterface:
 
         return True  # Tell running to continue
 
-    def make_move(self, game_state, move_object):
+    def make_move(self, game_state, move_object, engine=None):
         """
         A function that makes a move in the game.
         """
@@ -155,19 +158,6 @@ class GraphicsUserInterface:
                 # print(self.valid_moves[i])
 
                 game_state.make_move(self.valid_moves[i])
-
-                # play the move sound # ToDo: Sound does not work
-                # if game_state.is_checkmate:
-                #     self._play_sound("game_end")
-                #
-                # elif game_state.in_check:
-                #     self._play_sound("check")
-                #
-                # elif self.valid_moves[i].is_capture:
-                #     self._play_sound("capture")
-                #
-                # else:
-                #     self._play_sound("move")
 
                 # animate move
                 self._animate_move(game_state, self.valid_moves[i])
@@ -211,7 +201,17 @@ class GraphicsUserInterface:
             pygame.draw.rect(self.screen, color, end_square)
             # draw captured piece back
             if str(move.piece_captured) != "--":
-                self.screen.blit(self.settings["IMAGES"][move.piece_captured.get_type()], end_square)
+                if move.is_enpassant_move:
+                    captured_pawn_square = (move.start_row, move.end_col)  # The square of the captured pawn
+                    captured_piece_type = game_state.board[captured_pawn_square[0]][captured_pawn_square[1]].get_type()
+                    if captured_piece_type in self.settings["IMAGES"]:
+                        self.screen.blit(self.settings["IMAGES"][captured_piece_type],
+                                         pygame.Rect(captured_pawn_square[1] * self.settings["SQ_SIZE"],
+                                                     captured_pawn_square[0] * self.settings["SQ_SIZE"],
+                                                     self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
+                else:
+                    self.screen.blit(self.settings["IMAGES"][move.piece_captured.get_type()], end_square)
+
 
             # print(self.settings["IMAGES"])
             # draw moving piece

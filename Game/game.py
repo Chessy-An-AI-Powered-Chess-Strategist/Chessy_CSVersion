@@ -39,7 +39,7 @@ def main():
                 print("No move found")
                 move = smf.findRandomMove(game_state.get_valid_moves_advanced())
 
-            graphics.make_move(game_state, move)
+            graphics.make_move(game_state, move, engine)
 
 
 

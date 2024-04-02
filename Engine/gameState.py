@@ -103,7 +103,6 @@ class GameState:
         self.update_castle_rights(move)
         self.castRightLog.append(CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
                                               self.currentCastlingRight.wqs, self.currentCastlingRight.bqs))
-
         # enpressant move
         if move.is_enpessant_move:
             self.board[move.start_row][move.end_col] = '--'

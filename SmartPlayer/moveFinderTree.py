@@ -17,7 +17,7 @@ class MoveFinderTree:
     _next_valid_moves: list[MoveFinderTree]
     _is_whites_move: bool
 
-    def __init__(self, game_state: GameState, move: Move = None):
+    def __init__(self, game_state: GameState, engine, move: Move = None):
 
         self._move = move
         self._next_valid_moves = []
@@ -27,41 +27,59 @@ class MoveFinderTree:
             self._is_whites_move = False
             for _ in range(tree_settings["DEPTH"]):
                 # create the rest
-                self.add_next_possible_moves(game_state)
+                self.add_next_possible_moves(game_state, engine)
 
     def is_root(self):
         return self._move is None
 
     def is_leaf(self):
-        return self._next_valid_moves == []
+        return len(self._next_valid_moves) == 0
 
-    def add_next_possible_moves(self, game_state: GameState):
+    def get_depth(self):
+        if self.is_leaf():
+            return 0
+        else:
+            return max([next_possible_move.get_depth() for next_possible_move in self._next_valid_moves] + [0]) + 1
+
+    def add_next_possible_moves(self, game_state: GameState, engine):
 
         if self.is_leaf():
-
-            for next_possible_move in game_state.get_valid_moves():
+            for next_possible_move in game_state.get_valid_moves_advanced():
                 self._next_valid_moves.append(MoveFinderTree(game_state, next_possible_move))
-
         else:
             for move in self._next_valid_moves:
                 copy_of_game_state = copy.copy(game_state)
                 copy_of_game_state.make_move(move._move)
-                move.add_next_possible_moves(copy_of_game_state)
+                move.add_next_possible_moves(copy_of_game_state, engine)
 
-    def find_next_best_move(self, game_state: GameState) -> (Move, int):
+    def find_next_best_move(self, game_state: GameState, engine) -> Move:
+        turn_multiplier = 1 if game_state.white_to_move else -1
+
+        best_move, score = self.find_move_negamax(game_state, turn_multiplier, engine)
+        return best_move
+
+    def find_move_negamax(self, game_state: GameState, turn_multiplier, engine) -> (Move, int):
+        next_move = None
+        max_score = -1000  # - checkmate
+
         if self.is_leaf():
-            return None, board_evaluation(game_state)  # No move associated with leaf, return score
-        else:
-            best_move, max_score = None, -1000
-            for node in self._next_valid_moves:
-                copy_of_game_state = copy.deepcopy(game_state)
-                copy_of_game_state.make_move(node._move)
-                copy_of_game_state_with_move = copy.deepcopy(copy_of_game_state)
-                _, score = node.find_next_best_move(copy_of_game_state_with_move)  # Unpack returned tuple
-                if score > max_score:
-                    max_score, best_move = score, node._move
+            return None, turn_multiplier * board_evaluation(game_state)
 
-            return best_move, max_score
+        else:
+            for move in self._next_valid_moves:
+                game_state.make_move(move._move, engine)
+                score = -move.find_move_negamax(game_state, -turn_multiplier, engine)[1]
+
+                if score > max_score:
+                    max_score = score
+                    next_move = self._move
+
+                    if self.is_root():
+                        next_move = move._move
+
+                game_state.undo_move()
+
+            return next_move, max_score
 
     def print_tree(self, indent=0):
         print(' ' * indent + str(self._move), self._is_whites_move)
@@ -123,7 +141,7 @@ class MoveFinderTree:
     def move_down(self, move: Move, game_state: GameState):
         """move down the tree"""
         for node in self._next_valid_moves:
-            if node._move == move:
+            if node._move.move_id == move.move_id:
                 self._move = None
                 if node.is_leaf():
                     node.add_next_possible_moves(game_state)

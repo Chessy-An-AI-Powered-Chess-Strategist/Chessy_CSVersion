@@ -210,6 +210,8 @@ class King(ChessPiece):
                 else:
                     break
 
+        return pinned_pieces
+
     def get_checks(self, board, start, pinned_pieces):
         """
         A function identifies all potential checks to the King's position on the chessboard.
