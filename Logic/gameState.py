@@ -10,7 +10,8 @@ class GameState:
 
     def __init__(self):
         # Set up the board
-        row1 = [Rook(False), Knight(False), Bishop(False), Queen(False), King(False), Bishop(False), Knight(False), Rook(False)]
+        row1 = [Rook(False), Knight(False), Bishop(False), Queen(False), King(False), Bishop(False), Knight(False),
+                Rook(False)]
         row2 = [Pawn(False) for _ in range(8)]
         row3 = [Void() for _ in range(8)]
         row4 = [Void() for _ in range(8)]
@@ -127,7 +128,11 @@ class GameState:
         kings_location = self.get_kings_location()
 
         print("Kings location:", self.board[kings_location[0]][kings_location[1]])
+        print("in check", self.in_check)
+        print("is checkmate", self.is_checkmate)
+        print(self.board)
 
+        assert self.is_checkmate == False
         assert self.board[kings_location[0]][kings_location[1]].get_type()[1] == "K"
 
         king_piece = self.board[kings_location[0]][kings_location[1]]
@@ -137,10 +142,10 @@ class GameState:
 
         print(pinned_pieces)
 
-
         # if the king is in check
         if king_piece.is_check(self.board, kings_location):
             checks = king_piece.get_checks(self.board, kings_location)
+            self.in_check = True
 
             if len(checks) == 1:
                 piece_checking = checks[0]
@@ -159,7 +164,8 @@ class GameState:
                     valid_squares = [(check_row, check_col)]
                 else:
                     for i in range(1, 8):
-                        valid_square = (kings_location[0] + piece_checking[2] * i, kings_location[1] + piece_checking[3] * i)
+                        valid_square = (
+                        kings_location[0] + piece_checking[2] * i, kings_location[1] + piece_checking[3] * i)
                         valid_squares.append(valid_square)
                         if valid_square[0] == check_row and valid_square[1] == check_col:  # capture the piece
                             break
@@ -174,7 +180,7 @@ class GameState:
 
 
             else:  # if its a double check
-                king_piece.get_moves( self.board, kings_location, valid_moves, pinned_pieces)
+                king_piece.get_moves(self.board, kings_location, valid_moves, pinned_pieces)
 
         else:
             for row in range(8):
@@ -210,13 +216,3 @@ class GameState:
                 print("Stalemate")
 
         return valid_moves
-
-
-
-
-
-
-
-
-
-
