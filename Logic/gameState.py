@@ -220,26 +220,6 @@ class GameState:
             for row in range(8):
                 for col in range(8):
                     piece = self.board[row][col]
-                    # check specifically for enpassant moves
-                    if piece.get_type() == "wp" or "bp":
-                        if (row + 1, col + 1) == self.enpassant_coord:
-                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col + 1), board=self.board,
-                                                    is_enpassant_move=True))
-
-                        if (row + 1, col - 1) == self.enpassant_coord:
-                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col - 1), board=self.board,
-                                                    is_enpassant_move=True))
-
-                        if (row - 1, col + 1) == self.enpassant_coord:
-                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col + 1), board=self.board,
-                                                    is_enpassant_move=True))
-
-                        if (row - 1, col - 1) == self.enpassant_coord:
-                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col - 1), board=self.board,
-                                                    is_enpassant_move=True))
-
-                    if piece.is_white == self.white_to_move:
-                        piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
                     if piece not in pinned_pieces:
                         # check specifically for enpassant moves
                         if piece.get_type() == "wp" or "bp":
