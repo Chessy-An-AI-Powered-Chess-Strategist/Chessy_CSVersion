@@ -33,3 +33,6 @@ class ChessPiece:
 
     def is_check(self, board, kings_location):
         raise NotImplementedError("This method must be implemented by a subclass")
+
+    def get_pinned_pieces(self, board, kings_location):
+        raise NotImplementedError("This method must be implemented by a subclass")
