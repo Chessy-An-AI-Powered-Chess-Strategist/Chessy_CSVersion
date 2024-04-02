@@ -1,7 +1,7 @@
-
 from .base.chessPiece import ChessPiece
 from ..move import Move
 from .void import Void
+from Engine.gameState import CastleRights
 
 
 class King(ChessPiece):
@@ -13,6 +13,9 @@ class King(ChessPiece):
         Constructor to initialize new King Chess piece
         """
         super().__init__(is_white, piece_symbol)
+        self.currentCastlingRight = CastleRights(True, True, True, True)
+        self.castleRightLog = [CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
+                                            self.currentCastlingRight.wqs, self.currentCastlingRight.bqs)]
 
     def get_moves(self, board, start, moves, pinned_pieces):
         """
@@ -33,9 +36,8 @@ class King(ChessPiece):
 
             # Check if the end square is within the board
             if 0 <= end_row < 8 and 0 <= end_col < 8:
-                # collect peace on the end square
+                # collect piece on the end square
                 end_piece = board[end_row][end_col]
-                # print("piece", str(end_piece), end_row, end_co
 
                 # if peace is not ally ( empty or enemy)
                 if end_piece.is_white != self.is_white:
@@ -64,10 +66,37 @@ class King(ChessPiece):
         rooks = [board[row_1][col_1] for col_1 in [0, 7] for row_1 in [0, 7] if board[row_1][col_1].is_white == self.is_white and board[row_1][col_1].get_type() == 'R' and board[row_1][col_1].is_first_move]
         king = board[row][col]
 
-        if king.is_first_move:
-            return
-
         # ToDo: Complete implementation of castling
+        if king.is_first_move:
+            # Check if castling is possible
+            for rook in rooks:
+                # Check if the squares between the king and rook are empty
+                empty_squares = [(row, col - i) for i in range(1, 4)] if rook.col < col else [(row, col + i) for i in range(1, 3)]
+                # find which of these squares is under attack
+                squares_under_attack = self.squares_under_attack(board, self.is_white)
+
+                if all(board[square[0]][square[1]].get_type() == '--' and not self.is_check(board, square) and square not in squares_under_attack for square in empty_squares):
+                    moves.append(Move(start, (row, col - 2 if rook.col < col else col + 2), board, is_castling=True))
+
+        return moves
+
+    def squares_under_attack(self, board, is_white):
+        """
+        A function that determines which squares are under attack by the opponent of the given color.
+        """
+        squares_under_attack = []
+
+        for row in range(8):
+            for col in range(8):
+                piece = board[row][col]
+                if piece.is_white != is_white and str(piece) != '--':
+                    # Get the moves of the opponent's piece
+                    opponent_moves = piece.get_moves(board, (row, col), [], [])
+
+                    for move in opponent_moves:
+                        squares_under_attack.append(move.end)
+
+        return squares_under_attack
 
     def is_check(self, board, start):
         """
@@ -208,7 +237,6 @@ class King(ChessPiece):
                 if 0 <= end_row < 8 and 0 <= end_col < 8:
                     # collect peace on the end square
                     end_piece = board[end_row][end_col]
-                    # print(str(end_piece), end_row, end_col)
 
                     # if peace is empty
                     if end_piece.is_white == self.is_white:
