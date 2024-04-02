@@ -28,6 +28,9 @@ class GameState:
         self.is_checkmate = False
         self.is_stalemate = False
 
+        # enpassant coord
+        self.enpassant_coord = ()
+
         self.in_check = False
 
         self.pinned_pieces = []
@@ -37,7 +40,6 @@ class GameState:
 
     def make_move(self, move: Move):
 
-
         # check for pawn promotion
         if move.piece_moved.get_type()[1] == "p" and (move.end_row == 0 or move.end_row == 7):
             move.piece_moved = Queen(move.piece_moved.is_white)
@@ -46,7 +48,17 @@ class GameState:
         self.board[move.start_row][move.start_col] = Void()
         self.move_log.append(move)
 
+        # check if its an enpassant move
+        if move.is_enpassant_move:
+            self.board[move.start_row][move.end_col] = Void()
+
         self.white_to_move = not self.white_to_move
+
+        # update enpassant coordinate if two pawn advance
+        if move.piece_moved.get_type()[1] == "p" and abs(move.start_row - move.end_row) == 2:
+            self.enpassant_coord = ((move.start_row + move.end_row) // 2, move.start_col)
+        else:
+            self.enpassant_coord = ()
 
         # record moving form piece
         move.piece_moved.piece_moved()
@@ -57,6 +69,7 @@ class GameState:
                 self.white_king_location = (move.end_row, move.end_col)
             else:
                 self.black_king_location = (move.end_row, move.end_col)
+
 
     def undo_move(self):
         if len(self.move_log) == 0:
@@ -71,6 +84,11 @@ class GameState:
         # check to revert pawn promotion
         if move.is_pawn_promotion:
             self.board[move.start_row][move.start_col] = Pawn(move.piece_moved.is_white)
+
+        if move.is_enpassant_move:
+            self.board[move.end_row][move.end_col] = Void()
+            self.board[move.start_row][move.end_col] = move.piece_captured
+            self.enpassant_coord = (move.end_row, move.end_col)
 
     def get_valid_moves(self):
         pinned_pieces = []
@@ -144,6 +162,24 @@ class GameState:
             for row in range(8):
                 for col in range(8):
                     piece = self.board[row][col]
+                    # check specifically for enpassant moves
+                    if piece.get_type() == "wp" or "bp":
+                        if (row + 1, col + 1) == self.enpassant_coord:
+                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col + 1), board=self.board,
+                                                    is_enpassant_move=True))
+
+                        if (row + 1, col - 1) == self.enpassant_coord:
+                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col - 1), board=self.board,
+                                                    is_enpassant_move=True))
+
+                        if (row - 1, col + 1) == self.enpassant_coord:
+                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col + 1), board=self.board,
+                                                    is_enpassant_move=True))
+
+                        if (row - 1, col - 1) == self.enpassant_coord:
+                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col - 1), board=self.board,
+                                                    is_enpassant_move=True))
+
                     if piece.is_white == self.white_to_move:
                         piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
 

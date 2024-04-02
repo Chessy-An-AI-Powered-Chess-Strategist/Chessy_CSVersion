@@ -1,7 +1,5 @@
-
-
+from Logic.pieces import pawn
 class Move:
-
     # Positioning data for board and moves
     ranks_to_rows = {"1": 7, "2": 6, "3": 5, "4": 4,
                      "5": 3, "6": 2, "7": 1, "8": 0}
@@ -10,7 +8,8 @@ class Move:
                      "e": 4, "f": 5, "g": 6, "h": 7}
     cols_to_files = {v: k for k, v in files_to_cols.items()}
 
-    def __init__(self, start_sq, end_sq, board, is_capture: bool = False, en_passant=False, is_castle_move=False, is_pawn_promotion: bool = False) -> None:
+    def __init__(self, start_sq, end_sq, board, is_capture: bool = False, en_passant=False, is_castle_move=False,
+                 is_pawn_promotion: bool = False, is_enpassant_move=False) -> None:
         """
         A constructor that initializes a new Move object
         """
@@ -27,9 +26,10 @@ class Move:
         self.is_pawn_promotion = is_pawn_promotion
 
         # check for en passant move
-        # self.is_en_passant = en_passant
-        # if self.is_en_passant:
-        #     self.piece_captured = 'wp' if self.piece_moved == 'bp' else 'bp'
+        self.is_enpassant_move = is_enpassant_move
+
+        if self.is_enpassant_move:
+            self.piece_captured = pawn.Pawn(False) if self.piece_moved.get_type() == 'wp' else pawn.Pawn(True)
         #
         # if self.piece_moved == 'wp' and self.end_row == 0 or self.piece_moved == 'bp' and self.end_row == 7:
         #     self.is_pawn_promotion = True

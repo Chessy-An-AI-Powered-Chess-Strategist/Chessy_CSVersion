@@ -38,6 +38,7 @@ class Pawn(ChessPiece):
                     moves.append(Move(start, (row + direction, col + 1), board, is_capture=True,
                                       is_pawn_promotion=self.is_pawn_promotion))
 
+
             # check for enemy pieces for capture on the left
             if 0 <= col - 1 < 8 and board[row + direction][col - 1].is_white != self.is_white:
 
