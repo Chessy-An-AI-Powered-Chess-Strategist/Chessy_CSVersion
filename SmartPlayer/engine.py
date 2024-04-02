@@ -6,7 +6,7 @@ class Engine:
     tree: MoveFinderTree
 
     def __init__(self, game_state):
-        self.tree = MoveFinderTree(game_state, game_state.white_to_move)
+        self.tree = MoveFinderTree(game_state, self, game_state.white_to_move)
         self.game_state = game_state
 
     def findRandomMove(self, validMoves):
@@ -15,10 +15,12 @@ class Engine:
 
     def find_best_move_tree(self, game_state, valid_moves):
 
-        best_move = self.tree.find_next_best_move(game_state)[0]
+        best_move = self.tree.find_next_best_move(game_state, self)
         # best_move = self.findRandomMove(valid_moves)
 
-        self.tree.add_next_possible_moves(game_state)
+        self.tree.add_next_possible_moves(game_state, self)
+        # print("depth:", self.tree.get_depth())
+        self.record_a_move_made(best_move)
         return best_move
 
     def record_a_move_made(self, move):

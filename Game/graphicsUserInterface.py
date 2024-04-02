@@ -140,7 +140,7 @@ class GraphicsUserInterface:
 
         return True  # Tell running to continue
 
-    def make_move(self, game_state, move_object):
+    def make_move(self, game_state, move_object, engine=None):
         """
         A function that makes a move in the game.
         """
@@ -158,19 +158,6 @@ class GraphicsUserInterface:
                 # print(self.valid_moves[i])
 
                 game_state.make_move(self.valid_moves[i])
-
-                # play the move sound # ToDo: Sound does not work
-                # if game_state.is_checkmate:
-                #     self._play_sound("game_end")
-                #
-                # elif game_state.in_check:
-                #     self._play_sound("check")
-                #
-                # elif self.valid_moves[i].is_capture:
-                #     self._play_sound("capture")
-                #
-                # else:
-                #     self._play_sound("move")
 
                 # animate move
                 self._animate_move(game_state, self.valid_moves[i])

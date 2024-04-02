@@ -1,17 +1,21 @@
 # from ChessMain.ChessMain import main
 from Game.game import main
 from SmartPlayer import MoveFinderTree
-from Engine.gameState import GameState
+from Logic import GameState
 
 
 def run():
     # from Game import game
     main()
-    game_state = GameState()
-    # print(type(game_state))
-    tree = MoveFinderTree(game_state, None)
+    # game_state = GameState()
+    # # print(type(game_state))
+    # tree = MoveFinderTree(game_state, None)
     #
-    print(tree.find_next_best_move(game_state))
+    # print(tree.get_depth())
+    #
+    # tree.print_tree()
+    # #
+    # print(tree.find_next_best_move(game_state))
 
 
 if __name__ == '__main__':
