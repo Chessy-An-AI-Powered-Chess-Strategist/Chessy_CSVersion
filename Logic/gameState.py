@@ -84,11 +84,6 @@ class GameState:
                 self.board[move.end_row][move.end_col + 1] = self.board[rook_location[0]][rook_location[1]]
                 self.board[rook_location[0]][rook_location[1]] = Void()
 
-
-
-
-
-
     def undo_move(self):
         if len(self.move_log) == 0:
             return

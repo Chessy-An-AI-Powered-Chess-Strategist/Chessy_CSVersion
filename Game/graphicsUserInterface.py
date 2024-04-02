@@ -221,6 +221,48 @@ class GraphicsUserInterface:
                 self.screen.blit(self.settings["IMAGES"][move.piece_moved.get_type()],
                                     pygame.Rect(int(c * self.settings["SQ_SIZE"]), int(r * self.settings["SQ_SIZE"]),
                                                  self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
+
+
+            # check for castling move
+            if move.is_castle_move:
+
+                # identify the side of the castle
+                if move.start_col < move.end_col:  # right side castle
+                    rook_location = (7, 7) if move.piece_moved.is_white else (0, 0)
+                    delta_rook_row = 0
+                    delta_rook_col = -2
+
+                    frame_count_castle = (abs(delta_rook_row) + abs(delta_rook_col)) * frames_per_square
+
+                    r_rook, c_rook = (rook_location[0] + delta_rook_row * frame / frame_count_castle,
+                                      rook_location[1] + delta_rook_col * frame / frame_count_castle)
+
+                    rook_piece = game_state.board[rook_location[0]][rook_location[1]]
+
+                    if str(rook_piece) != "--":
+                        self.screen.blit(self.settings["IMAGES"][rook_piece.get_type()],
+                                         pygame.Rect(int(c_rook * self.settings["SQ_SIZE"]),
+                                                     int(r_rook * self.settings["SQ_SIZE"]),
+                                                     self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
+
+                else:  # left side castle
+                    rook_location = (7, 0) if move.piece_moved.is_white else (0, 7)
+                    delta_rook_row = 0
+                    delta_rook_col = 3
+
+                    frame_count_castle = (abs(delta_rook_row) + abs(delta_rook_col)) * frames_per_square
+
+                    r_rook, c_rook = (rook_location[0] + delta_rook_row * frame / frame_count_castle,
+                                      rook_location[1] + delta_rook_col * frame / frame_count_castle)
+
+                    rook_piece = game_state.board[rook_location[0]][rook_location[1]]
+
+                    if str(rook_piece) != "--":
+                        self.screen.blit(self.settings["IMAGES"][rook_piece.get_type()],
+                                         pygame.Rect(int(c_rook * self.settings["SQ_SIZE"]),
+                                                     int(r_rook * self.settings["SQ_SIZE"]),
+                                                     self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
+
             pygame.display.flip()
             self.clock.tick(60)
 
