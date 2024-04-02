@@ -101,10 +101,15 @@ class GameState:
         if move.is_pawn_promotion:
             self.board[move.start_row][move.start_col] = Pawn(move.piece_moved.is_white)
 
+        # undo enpassant move
         if move.is_enpassant_move:
             self.board[move.end_row][move.end_col] = Void()
             self.board[move.start_row][move.end_col] = move.piece_captured
             self.enpassant_coord = (move.end_row, move.end_col)
+
+        # revert enpassant_coord if the move being undone was a two-square pawn advance
+        if move.piece_moved.get_type()[1] == "p" and abs(move.start_row - move.end_row) == 2:
+            self.enpassant_coord = ()
 
     def get_valid_moves(self):
         pinned_pieces = []
