@@ -143,8 +143,9 @@ class King(ChessPiece):
 
                     if 0 <= end_row < 8 and 0 <= end_col < 8:
                         end_piece = board[end_row][end_col]
-
-                        if end_piece.is_white != self.is_white and end_piece.get_type() == 'N':
+                        
+                        if str(end_piece) != '--' and end_piece.is_white != self.is_white and end_piece.get_type()[1] == 'N':
+                            print("there is a knight attacking the king")
                             return True
 
         return False
@@ -261,7 +262,7 @@ class King(ChessPiece):
                     if 0 <= end_row < 8 and 0 <= end_col < 8:
                         end_piece = board[end_row][end_col]
 
-                        if end_piece.is_white != self.is_white and end_piece.get_type() == 'N':
+                        if str(end_piece) != '--' and end_piece.is_white != self.is_white and end_piece.get_type()[1] == 'N':
                             checks.append((end_piece, end_row, end_col))
 
         return checks
