@@ -47,6 +47,7 @@ class GameState:
         if move.piece_moved.get_type()[1] == "p" and (move.end_row == 0 or move.end_row == 7):
             move.piece_moved = Queen(move.piece_moved.is_white)
 
+        # make the move
         self.board[move.end_row][move.end_col] = move.piece_moved
         self.board[move.start_row][move.start_col] = Void()
         self.move_log.append(move)
@@ -54,8 +55,6 @@ class GameState:
         # check if its an enpassant move
         if move.is_enpassant_move:
             self.board[move.start_row][move.end_col] = Void()
-
-        self.white_to_move = not self.white_to_move
 
         # update enpassant coordinate if two pawn advance
         if move.piece_moved.get_type()[1] == "p" and abs(move.start_row - move.end_row) == 2:
@@ -82,11 +81,20 @@ class GameState:
                 self.board[move.end_row][move.end_col - 1] = self.board[rook_location[0]][rook_location[1]]
                 self.board[rook_location[0]][rook_location[1]] = Void()
 
+                # record the rook move
+                self.board[rook_location[0]][rook_location[1]].piece_moved()
+
             else:  # left side castle
                 rook_location = (7, 0) if move.piece_moved.is_white else (0, 0)
                 # move rook to the right of the king
                 self.board[move.end_row][move.end_col + 1] = self.board[rook_location[0]][rook_location[1]]
                 self.board[rook_location[0]][rook_location[1]] = Void()
+
+                # record the rook move
+                self.board[rook_location[0]][rook_location[1]].piece_moved()
+
+        # change the turn
+        self.white_to_move = not self.white_to_move
 
     def undo_move(self):
         if len(self.move_log) == 0:
@@ -220,3 +228,9 @@ class GameState:
                 # print("Stalemate")
 
         return valid_moves
+    def __str__(self):
+        board = ""
+        for row in self.board:
+           board += str([piece.get_type() for piece in row]) + "\n"
+
+        return board
