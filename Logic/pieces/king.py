@@ -50,7 +50,7 @@ class King(ChessPiece):
                         board[row][col] = board[end_row][end_col]
                         board[end_row][end_col] = end_piece
 
-                        if str(end_piece) == '--':
+                        if isinstance(end_piece, Void):
                             moves.append(Move(start, (end_row, end_col), board))
                         else:
                             moves.append(Move(start, (end_row, end_col), board, is_capture=True))
@@ -74,7 +74,7 @@ class King(ChessPiece):
         for row in range(8):
             for col in range(8):
                 piece = board[row][col]
-                if piece.is_white != is_white and str(piece) != '--':
+                if piece.is_white != is_white and not isinstance(piece, Void):
                     # Get the moves of the opponent's piece
                     opponent_moves = piece.get_moves(board, (row, col), [], [])
 
@@ -317,7 +317,7 @@ class King(ChessPiece):
 
                 for check_col in range(col - 1, rook[1][1] + 1, -1):
                     # break if it is not empty
-                    if str(board[row][check_col]) != '--':
+                    if not isinstance(board[row][check_col], Void):
                         print("Not uncheck for left rook")
                         eligible_move = False
                         break

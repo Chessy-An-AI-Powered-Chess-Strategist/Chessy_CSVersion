@@ -99,10 +99,20 @@ class GameState:
         if move.is_pawn_promotion:
             self.board[move.start_row][move.start_col] = Pawn(move.piece_moved.is_white)
 
+        # check to revert enpassant move
         if move.is_enpassant_move:
             self.board[move.end_row][move.end_col] = Void()
             self.board[move.start_row][move.end_col] = move.piece_captured
             self.enpassant_coord = (move.end_row, move.end_col)
+
+        # check to remove castling move
+        if move.end_col - move.start_col == 2:  # king side
+            self.board[move.end_row][move.end_col + 1] = self.board[move.end_row][move.end_col - 1]
+            self.board[move.end_row][move.end_col - 1] = Void()
+
+        else:  # queen side
+            self.board[move.end_row][move.end_col - 2] = self.board[move.end_row][move.end_col + 1]
+            self.board[move.end_row][move.end_col + 1] = Void()
 
     def get_valid_moves(self):
         pinned_pieces = []
@@ -138,9 +148,8 @@ class GameState:
         king_piece = self.board[kings_location[0]][kings_location[1]]
 
         # collect pinned_pieces
-        pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
-
-        print(pinned_pieces)
+        if not isinstance(king_piece, Void) and isinstance(king_piece, King):
+            pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
 
         # if the king is in check
         if king_piece.is_check(self.board, kings_location):

@@ -8,3 +8,6 @@ class Void(ChessPiece):
 
     def __str__(self):
         return "--"
+
+    def is_check(self, board, start):
+        return
