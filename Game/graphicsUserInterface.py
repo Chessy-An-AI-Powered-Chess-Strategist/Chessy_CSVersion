@@ -1,6 +1,7 @@
 import pygame
 from Engine.Move import Move
 from Logic.pieces import Void
+from .settings import gui_settings
 
 
 class GraphicsUserInterface:
@@ -33,11 +34,24 @@ class GraphicsUserInterface:
         # Clear the screen
         self.screen.fill(pygame.Color("white"))
 
+
         # Draw the board
         self._draw_board()
         self._highlight_squares(game_state)
         self._draw_pieces(game_state.board)
+        # self.draw_text("Hello")
+
+        if game_state.is_checkmate and game_state.white_to_move:
+            self.draw_text("Black wins by checkmate")
+        elif game_state.is_checkmate:
+            self.draw_text("White wins by checkmate")
+
+        elif game_state.is_stalemate:
+            self.draw_text("Stalemate")
+
         pygame.display.flip()
+
+
 
     def _draw_board(self):
         """
@@ -146,22 +160,21 @@ class GraphicsUserInterface:
         """
         self.valid_moves = game_state.get_valid_moves_advanced()
 
-        print("move object", move_object)
+        # print("move object", move_object)
         for i in range(len(self.valid_moves)):
 
             # print("i:", self.valid_moves[i])
             if str(move_object) == str(self.valid_moves[i]):
-                print("valid_move:", self.valid_moves[i])
+                # print("valid_move:", self.valid_moves[i])
 
                 move_object.is_capture = self.valid_moves[i].is_capture
 
                 # print(self.valid_moves[i])
-
                 game_state.make_move(self.valid_moves[i])
 
                 # animate move
                 self._animate_move(game_state, self.valid_moves[i])
-                print(game_state.board)
+                # print(game_state.board)
                 # print(self.valid_moves_for_highlights)
 
                 # display the move
@@ -278,6 +291,21 @@ class GraphicsUserInterface:
 
         else:
             self._play_sound("move")
+
+    def draw_text(self, text):
+        """
+        A function that draws text onto the screen
+        """
+        font = pygame.font.SysFont("Helvitca", 32, True, False)
+        text_object = font.render(text, 0, pygame.Color("Black"))
+        text_location = pygame.Rect(0, 0, gui_settings["WIDTH"], gui_settings["HEIGHT"]).move(
+            gui_settings["WIDTH"] / 2 - text_object.get_width() / 2,
+            gui_settings["HEIGHT"] / 2 - text_object.get_height() / 2)
+        self.screen.blit(text_object, text_location)
+        text_object = font.render(text, 0, pygame.Color("Gray"))
+        self.screen.blit(text_object, text_location.move(2, 2))
+
+
 
     def _play_sound(self, sound_name):
         """

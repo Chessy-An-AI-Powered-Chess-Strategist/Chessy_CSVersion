@@ -56,7 +56,6 @@ class Queen(ChessPiece):
                         else:
                             break
 
-
     def get_moves_like_rook(self, board, start, moves, pinned_pieces):
 
         row, col = start
