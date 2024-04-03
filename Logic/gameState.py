@@ -220,3 +220,11 @@ class GameState:
                 # print("Stalemate")
 
         return valid_moves
+
+
+    def __str__(self):
+        board_str = ""
+        for row in self.board:
+            board_str += str([piece.get_type() for piece in row])
+            board_str += "\n"
+        return board_str
