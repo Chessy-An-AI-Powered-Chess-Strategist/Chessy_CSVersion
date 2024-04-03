@@ -107,15 +107,22 @@ class GameState:
             self.board[move.end_row][move.end_col] = Void()
             self.board[move.start_row][move.end_col] = move.piece_captured
             self.enpassant_coord = (move.end_row, move.end_col)
+            
+        # check to revert castling move
+        if move.is_castle_move:
 
-        # check to remove castling move
-        if move.end_col - move.start_col == 2:  # king side
-            self.board[move.end_row][move.end_col + 1] = self.board[move.end_row][move.end_col - 1]
-            self.board[move.end_row][move.end_col - 1] = Void()
+            # check to remove castling move
+            if move.end_col - move.start_col == 2:  # king side
+                rook_location = (7, 7) if move.piece_moved.is_white else (0, 0)
+                
+                self.board[rook_location[0]][rook_location[1]] = self.board[move.end_row][move.end_col - 1]
+                self.board[move.end_row][move.end_col - 1] = Void()
 
-        else:  # queen side
-            self.board[move.end_row][move.end_col - 2] = self.board[move.end_row][move.end_col + 1]
-            self.board[move.end_row][move.end_col + 1] = Void()
+            else:  # queen side
+                rook_location = (7, 0) if move.piece_moved.is_white else (0, 7)
+                
+                self.board[rook_location[0]][rook_location[1]] = self.board[move.end_row][move.end_col + 1]
+                self.board[move.end_row][move.end_col + 1] = Void()
 
         # keep track of the king's location
         if move.piece_moved.get_type()[1] == "K":
