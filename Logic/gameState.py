@@ -77,13 +77,13 @@ class GameState:
         # check if the move is castling
         if move.is_castle_move:
             if move.end_col - move.start_col == 2:  # right side castle
-                rook_location = (7, 7) if move.piece_moved.is_white else (0, 0)
+                rook_location = (7, 7) if move.piece_moved.is_white else (0, 7)
                 # move rook to the left of the king
                 self.board[move.end_row][move.end_col - 1] = self.board[rook_location[0]][rook_location[1]]
                 self.board[rook_location[0]][rook_location[1]] = Void()
 
             else:  # left side castle
-                rook_location = (7, 0) if move.piece_moved.is_white else (0, 7)
+                rook_location = (7, 0) if move.piece_moved.is_white else (0, 0)
                 # move rook to the right of the king
                 self.board[move.end_row][move.end_col + 1] = self.board[rook_location[0]][rook_location[1]]
                 self.board[rook_location[0]][rook_location[1]] = Void()
@@ -113,13 +113,13 @@ class GameState:
 
             # check to remove castling move
             if move.end_col - move.start_col == 2:  # king side
-                rook_location = (7, 7) if move.piece_moved.is_white else (0, 0)
+                rook_location = (7, 7) if move.piece_moved.is_white else (0, 7)
                 
                 self.board[rook_location[0]][rook_location[1]] = self.board[move.end_row][move.end_col - 1]
                 self.board[move.end_row][move.end_col - 1] = Void()
 
             else:  # queen side
-                rook_location = (7, 0) if move.piece_moved.is_white else (0, 7)
+                rook_location = (7, 0) if move.piece_moved.is_white else (0, 0)
                 
                 self.board[rook_location[0]][rook_location[1]] = self.board[move.end_row][move.end_col + 1]
                 self.board[move.end_row][move.end_col + 1] = Void()
