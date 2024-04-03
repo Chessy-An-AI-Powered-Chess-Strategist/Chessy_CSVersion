@@ -107,7 +107,11 @@ class GameState:
             self.board[move.end_row][move.end_col] = Void()
             self.board[move.start_row][move.end_col] = move.piece_captured
             self.enpassant_coord = (move.end_row, move.end_col)
-            
+
+        # check to rervet enpassant for two pawn advance
+        if move.piece_moved.get_type() == "wp" or "bp" and abs(move.start_row - move.end_row) == 2:
+            move.is_enpassant_move = False
+            self.enpassant_coord = ()
         # check to revert castling move
         if move.is_castle_move:
 
