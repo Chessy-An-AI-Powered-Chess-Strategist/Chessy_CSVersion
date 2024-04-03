@@ -46,6 +46,17 @@ def main():
             graphics.make_move(game_state, move, engine)
 
 
+# if __name__ == '__main__':
+#
+#     import doctest
+#     doctest.testmod()
+#     import python_ta
+#
+#     python_ta.check_all(config={
+#         'extra-imports': ['Game', 'pygame', 'Logic', 'Engine', 'SmartPLayer'],  # the names (strs) of imported modules
+#         'allowed-io': [],  # the names (strs) of functions that call print/open/input
+#         'max-line-length': 120
+#     })
 
 
 
