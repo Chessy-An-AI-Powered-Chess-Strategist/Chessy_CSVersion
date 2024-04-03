@@ -36,7 +36,7 @@ def main():
             # move = smf.minimax_non_recursive(game_state, game_state.get_valid_moves_advanced())
             move = engine.find_best_move_tree(game_state, game_state.get_valid_moves_advanced())
             if move is None:
-                # print("No move found")
+                print("No move found")
                 move = smf.findRandomMove(game_state.get_valid_moves_advanced())
 
             graphics.make_move(game_state, move, engine)
