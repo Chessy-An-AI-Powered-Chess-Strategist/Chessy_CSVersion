@@ -26,12 +26,8 @@ class Queen(ChessPiece):
         pin_direction = ()
         row, col = start
 
-        for i in range(len(pinned_pieces) - 1, -1, -1):
-            if pinned_pieces[i][0] == row and pinned_pieces[i][1] == col:
-                is_pin = True
-                pin_direction = (pinned_pieces[i][2], pinned_pieces[i][3])
-                pinned_pieces.remove(pinned_pieces[i])
-                break
+        if self in pinned_pieces:
+            return
 
         # directions = up-left, up-right, down-right, down-left
         directions = ((-1, -1), (1, -1), (1, 1), (-1, 1))

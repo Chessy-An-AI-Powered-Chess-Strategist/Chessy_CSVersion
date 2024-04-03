@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 from .pieces import *
 from .pieces.base.chessPiece import ChessPiece
@@ -72,6 +74,7 @@ class GameState:
 
         # check to move kings
         if move.piece_moved.get_type()[1] == "K":
+            print("King move detected")
             if move.piece_moved.is_white:
                 self.white_king_location = (move.end_row, move.end_col)
             else:
@@ -115,8 +118,14 @@ class GameState:
         if move.piece_moved.get_type()[1] == "p" and abs(move.start_row - move.end_row) == 2:
             self.enpassant_coord = ()
 
-    def get_valid_moves(self):
-        pinned_pieces = []
+        # keep track of the king's location
+        if move.piece_moved.get_type()[1] == "K":
+            if move.piece_moved.is_white:
+                self.white_king_location = (move.start_row, move.start_col)
+            else:
+                self.black_king_location = (move.start_row, move.start_col)
+
+    def get_valid_moves(self, pinned_pieces):
         valid_moves = []
 
         for row in range(8):
@@ -124,8 +133,6 @@ class GameState:
                 piece = self.board[row][col]
                 if piece.is_white == self.white_to_move:
                     piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
-
-        # ToDo: Implement the logic for only valid moves
 
         return valid_moves
 
@@ -137,12 +144,7 @@ class GameState:
 
         kings_location = self.get_kings_location()
 
-        # print("Kings location:", self.board[kings_location[0]][kings_location[1]])
-        # print("in check", self.in_check)
-        # print("is checkmate", self.is_checkmate)
-        # print(self.board)
-
-        assert self.is_checkmate == False
+        print("The kings location", kings_location)
         assert self.board[kings_location[0]][kings_location[1]].get_type()[1] == "K"
 
         king_piece = self.board[kings_location[0]][kings_location[1]]
@@ -150,47 +152,31 @@ class GameState:
         # collect pinned_pieces
         pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
 
-        # print(pinned_pieces)
-        # print("Is in check:", self.in_check)
-        # print("Is king actually in check:", king_piece.is_check(self.board, kings_location))
-
-
         # if the king is in check
         if king_piece.is_check(self.board, kings_location):
             checks = king_piece.get_checks(self.board, kings_location, pinned_pieces)
             self.in_check = True
+            print("The checks in the game", checks)
 
             if len(checks) == 1:
                 piece_checking = checks[0]
                 check_row, check_col = piece_checking[0], piece_checking[1]
 
                 # collect teh list of all moves
-                for row in range(8):
-                    for col in range(8):
-                        piece = self.board[row][col]
-                        if piece.is_white == self.white_to_move:
-                            piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
+                valid_moves = self.get_valid_moves(pinned_pieces)
 
-                valid_squares = []  # squares that pieces can move to
+                for valid_move in copy.deepcopy(valid_moves):
 
-                if str(piece_checking[1]) == 'N':
-                    valid_squares = [(check_row, check_col)]
-                else:
-                    for i in range(1, 8):
-                        valid_square = (
-                        kings_location[0] + piece_checking[2] * i, kings_location[1] + piece_checking[3] * i)
-                        valid_squares.append(valid_square)
-                        if valid_square[0] == check_row and valid_square[1] == check_col:  # capture the piece
-                            break
+                    # make the move
+                    self.make_move(valid_move)
 
-                # print(f"Valid moves:", [str(move) for move in valid_moves])
+                    print(valid_move, king_piece.is_check(self.board, kings_location))
 
-                # get rid of any moves that don't block the check or move the king
-                for i in range(len(valid_moves) - 1, -1, -1):
-                    if valid_moves[i].piece_moved[1] != 'K':  # move king to get out of check
-                        if not (valid_moves[i].end_row, valid_moves[i].end_col) in valid_squares:
-                            valid_moves.remove(valid_moves[i])
+                    if king_piece.is_check(self.board, kings_location):
+                        valid_moves.remove(valid_move)
 
+                    # undo move
+                    self.undo_move()
 
             else:  # if its a double check
                 king_piece.get_moves(self.board, kings_location, valid_moves, pinned_pieces)
