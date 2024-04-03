@@ -1,6 +1,5 @@
 # from ChessMain.ChessMain import main
 from Game.game import main
-from __future__ import annotations
 from SmartPlayer import MoveFinderTree, Engine
 from Logic import GameState
 
