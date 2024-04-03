@@ -318,9 +318,9 @@ class GameState:
         """
         A function that returns a list of all the valid moves that can be made at the current game state
         """
-        tempEnpassantPossible = self.enpassant_coord
-        tempCastleRights = CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
-                                        self.currentCastlingRight.wqs, self.currentCastlingRight.bqs)
+        temp_enpassant_possible = self.enpassant_coord
+        temp_castle_rights = CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
+                                          self.currentCastlingRight.wqs, self.currentCastlingRight.bqs)
         moves = self.get_all_possible_moves()
         if self.white_to_move:
             self.get_castle_moves(self.white_king_location[0], self.white_king_location[1], moves)
@@ -339,8 +339,8 @@ class GameState:
             else:
                 self.is_stalemate = True
 
-        self.enpassant_coord = tempEnpassantPossible
-        self.currentCastlingRight = tempCastleRights
+        self.enpassant_coord = temp_enpassant_possible
+        self.currentCastlingRight = temp_castle_rights
         return moves
 
     def get_all_possible_moves(self):
