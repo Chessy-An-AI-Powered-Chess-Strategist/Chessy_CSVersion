@@ -3,13 +3,9 @@ from __future__ import annotations
 import copy
 import networkx as nx
 from plotly.graph_objs import Scatter, Figure
-import matplotlib.pyplot as plt
-from pyvis.network import Network
-import random
 
 from Logic import Move, GameState
 from .boardAlgorithms import board_evaluation
-from .settings import tree_settings
 
 
 class MoveFinderTree:
