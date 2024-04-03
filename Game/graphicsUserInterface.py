@@ -34,7 +34,6 @@ class GraphicsUserInterface:
         # Clear the screen
         self.screen.fill(pygame.Color("white"))
 
-
         # Draw the board
         self._draw_board()
         self._highlight_squares(game_state)
@@ -50,8 +49,6 @@ class GraphicsUserInterface:
             self.draw_text("Stalemate")
 
         pygame.display.flip()
-
-
 
     def _draw_board(self):
         """
@@ -225,7 +222,6 @@ class GraphicsUserInterface:
                 else:
                     self.screen.blit(self.settings["IMAGES"][move.piece_captured.get_type()], end_square)
 
-
             # print(self.settings["IMAGES"])
             # draw moving piece
 
@@ -234,7 +230,6 @@ class GraphicsUserInterface:
                 self.screen.blit(self.settings["IMAGES"][move.piece_moved.get_type()],
                                     pygame.Rect(int(c * self.settings["SQ_SIZE"]), int(r * self.settings["SQ_SIZE"]),
                                                  self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
-
 
             # check for castling move
             if move.is_castle_move:
@@ -304,8 +299,6 @@ class GraphicsUserInterface:
         self.screen.blit(text_object, text_location)
         text_object = font.render(text, 0, pygame.Color("Gray"))
         self.screen.blit(text_object, text_location.move(2, 2))
-
-
 
     def _play_sound(self, sound_name):
         """

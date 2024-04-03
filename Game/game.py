@@ -1,12 +1,13 @@
+
+# imports
 from Game.settings import gui_settings
 from Game.graphicsUserInterface import GraphicsUserInterface
 import pygame as p
-# Engine imports
 from Logic import GameState
 import Engine.SmartMoveFinderTest as smf
 from SmartPlayer import Engine
 
-
+#  initialize pygame object
 p.init()
 
 
@@ -17,7 +18,10 @@ is_player_black_human = True
 
 def main():
     """
-    Main function to run the chess game.
+    Entry point for the chess game.
+
+    Initializes the graphical user interface, game state, and engine based on player types.
+    Manages the game loop, handling player moves and updating the GUI accordingly.
     """
     graphics = GraphicsUserInterface(gui_settings)
     game_state = GameState()
