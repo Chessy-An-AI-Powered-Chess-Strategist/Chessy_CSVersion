@@ -54,9 +54,10 @@ class MoveFinderTree:
                 self._next_valid_moves.append(MoveFinderTree(game_state, next_possible_move))
         else:
             for move in self._next_valid_moves:
-                copy_of_game_state = copy.copy(game_state)
+                copy_of_game_state = copy.deepcopy(game_state)
                 copy_of_game_state.make_move(move._move)
-                move.add_next_possible_moves(copy_of_game_state)
+                if not copy_of_game_state.is_checkmate and not copy_of_game_state.is_stalemate:
+                    move.add_next_possible_moves(copy_of_game_state)
 
     def find_next_best_move(self, game_state: GameState) -> Move:
         turn_multiplier = 1 if game_state.white_to_move else -1
