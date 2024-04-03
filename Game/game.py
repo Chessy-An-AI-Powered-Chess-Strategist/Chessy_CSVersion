@@ -30,8 +30,7 @@ def main():
 
     running = True
     while running:
-        human_turn = ((game_state.white_to_move and is_player_white_human) or
-                      (not game_state.white_to_move and is_player_black_human))
+        human_turn = ((game_state.white_to_move and is_player_white_human) or (not game_state.white_to_move and is_player_black_human))
 
         running = graphics.handle_events(game_state)
         graphics.draw_game_state(game_state)
@@ -46,6 +45,17 @@ def main():
             graphics.make_move(game_state, move, engine)
 
 
+if __name__ == '__main__':
+
+    import doctest
+    doctest.testmod()
+    import python_ta
+
+    python_ta.check_all(config={
+        'extra-imports': ['Game', 'pygame', 'Logic', 'Engine', 'SmartPLayer'],  # the names (strs) of imported modules
+        'allowed-io': [],  # the names (strs) of functions that call print/open/input
+        'max-line-length': 120
+    })
 
 
 
