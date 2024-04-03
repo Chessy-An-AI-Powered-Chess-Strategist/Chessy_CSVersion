@@ -318,8 +318,6 @@ class GameState:
         """
         A function that returns a list of all the valid moves that can be made at the current game state
         """
-        for log in self.castRightLog:
-            print(log.wks, log.wqs, log.bks, log.bqs, end=' ,')
         tempEnpassantPossible = self.enpassant_coord
         tempCastleRights = CastleRights(self.currentCastlingRight.wks, self.currentCastlingRight.bks,
                                         self.currentCastlingRight.wqs, self.currentCastlingRight.bqs)

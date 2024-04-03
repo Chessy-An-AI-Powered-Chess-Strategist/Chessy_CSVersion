@@ -34,18 +34,12 @@ class GameState:
         # enpassant coord
         self.enpassant_coord = ()
 
-        # check for castling rights both kingside and queenside
-        self.white_can_castle = {'kingside' : True, 'queenside' : True}
-        self.black_can_castle = {'kingside' : True, 'queenside' : True}
-
         self.in_check = False
 
         self.pinned_pieces = []
 
         self.white_king_location = (7, 4)
         self.black_king_location = (0, 4)
-
-        self.game_over = False
 
     def make_move(self, move: Move):
 
@@ -79,7 +73,7 @@ class GameState:
                 self.white_king_location = (move.end_row, move.end_col)
             else:
                 self.black_king_location = (move.end_row, move.end_col)
-                
+
         # check if the move is castling
         if move.is_castle_move:
             if move.end_col - move.start_col == 2:  # right side castle
@@ -108,15 +102,20 @@ class GameState:
         if move.is_pawn_promotion:
             self.board[move.start_row][move.start_col] = Pawn(move.piece_moved.is_white)
 
-        # undo enpassant move
+        # check to revert enpassant move
         if move.is_enpassant_move:
             self.board[move.end_row][move.end_col] = Void()
             self.board[move.start_row][move.end_col] = move.piece_captured
             self.enpassant_coord = (move.end_row, move.end_col)
 
-        # revert enpassant_coord if the move being undone was a two-square pawn advance
-        if move.piece_moved.get_type()[1] == "p" and abs(move.start_row - move.end_row) == 2:
-            self.enpassant_coord = ()
+        # check to remove castling move
+        if move.end_col - move.start_col == 2:  # king side
+            self.board[move.end_row][move.end_col + 1] = self.board[move.end_row][move.end_col - 1]
+            self.board[move.end_row][move.end_col - 1] = Void()
+
+        else:  # queen side
+            self.board[move.end_row][move.end_col - 2] = self.board[move.end_row][move.end_col + 1]
+            self.board[move.end_row][move.end_col + 1] = Void()
 
         # keep track of the king's location
         if move.piece_moved.get_type()[1] == "K":
@@ -140,11 +139,11 @@ class GameState:
         return self.white_king_location if self.white_to_move else self.black_king_location
 
     def get_valid_moves_advanced(self):
+        pinned_pieces = []
         valid_moves = []
 
         kings_location = self.get_kings_location()
 
-        print("The kings location", kings_location)
         assert self.board[kings_location[0]][kings_location[1]].get_type()[1] == "K"
 
         king_piece = self.board[kings_location[0]][kings_location[1]]
@@ -152,9 +151,10 @@ class GameState:
         # collect pinned_pieces
         pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
 
+
         # if the king is in check
         if king_piece.is_check(self.board, kings_location):
-            checks = king_piece.get_checks(self.board, kings_location, pinned_pieces)
+            checks = king_piece.get_checks(self.board, kings_location)
             self.in_check = True
             print("The checks in the game", checks)
 
@@ -170,8 +170,6 @@ class GameState:
                     # make the move
                     self.make_move(valid_move)
 
-                    print(valid_move, king_piece.is_check(self.board, kings_location))
-
                     if king_piece.is_check(self.board, kings_location):
                         valid_moves.remove(valid_move)
 
@@ -185,36 +183,33 @@ class GameState:
             for row in range(8):
                 for col in range(8):
                     piece = self.board[row][col]
-                    if piece not in pinned_pieces:
-                        # check specifically for enpassant moves
-                        if piece.get_type() == "wp" or "bp":
-                            if (row + 1, col + 1) == self.enpassant_coord:
-                                valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col + 1), board=self.board,
-                                                        is_enpassant_move=True))
+                    # check specifically for enpassant moves
+                    if piece.get_type() == "wp" or "bp":
+                        if (row + 1, col + 1) == self.enpassant_coord:
+                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col + 1), board=self.board,
+                                                    is_enpassant_move=True))
 
-                            if (row + 1, col - 1) == self.enpassant_coord:
-                                valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col - 1), board=self.board,
-                                                        is_enpassant_move=True))
+                        if (row + 1, col - 1) == self.enpassant_coord:
+                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col - 1), board=self.board,
+                                                    is_enpassant_move=True))
 
-                            if (row - 1, col + 1) == self.enpassant_coord:
-                                valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col + 1), board=self.board,
-                                                        is_enpassant_move=True))
+                        if (row - 1, col + 1) == self.enpassant_coord:
+                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col + 1), board=self.board,
+                                                    is_enpassant_move=True))
 
-                            if (row - 1, col - 1) == self.enpassant_coord:
-                                valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col - 1), board=self.board,
-                                                        is_enpassant_move=True))
+                        if (row - 1, col - 1) == self.enpassant_coord:
+                            valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col - 1), board=self.board,
+                                                    is_enpassant_move=True))
 
-                        if piece.is_white == self.white_to_move:
-                            piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
+                    if piece.is_white == self.white_to_move:
+                        piece.get_moves(self.board, (row, col), valid_moves, pinned_pieces)
 
         if len(valid_moves) == 0:
-            self.game_over = True
             if king_piece.is_check(self.board, kings_location):
                 self.is_checkmate = True
                 print("Checkmate")
             else:
                 self.is_stalemate = True
-
                 print("Stalemate")
 
         return valid_moves
