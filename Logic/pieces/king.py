@@ -101,7 +101,7 @@ class King(ChessPiece):
             end_row_dir = row_moves[j]
             end_col_dir = col_moves[j]
 
-            for i in range(8):
+            for i in range(1, 8):
                 end_row = row + end_row_dir * i
                 end_col = col + end_col_dir * i
 
@@ -119,11 +119,11 @@ class King(ChessPiece):
                     elif str(end_piece) != '--':
 
                         # check if the piece is attacking the king
-                        is_a_rook_attacking = end_piece.get_type() == 'R' and (end_row == 0 or end_col == 0)  # horizontal or vertical
-                        is_a_bishop_attacking = end_piece.get_type() == 'B' and (end_row != 0 and end_col != 0)  # diagonal
-                        is_a_pawn_attacking = end_piece.get_type() == "p" and end_row == row + color and (end_col == col + end_col_dir)
-                        is_a_queen_attacking = end_piece.get_type() == 'Q'
-                        is_there_a_king_there = i == 1 and end_piece.get_type() == 'K'
+                        is_a_rook_attacking = end_piece.get_type()[1] == 'R' and (end_row == 0 or end_col == 0)  # horizontal or vertical
+                        is_a_bishop_attacking = end_piece.get_type()[1] == 'B' and (end_row != 0 and end_col != 0)  # diagonal
+                        is_a_pawn_attacking = end_piece.get_type()[1] == "p" and end_row == row + color and (end_col == col + end_col_dir)
+                        is_a_queen_attacking = end_piece.get_type()[1] == 'Q'
+                        is_there_a_king_there = i == 1 and end_piece.get_type()[1] == 'K'
 
                         is_check = (is_a_rook_attacking or is_a_bishop_attacking or is_a_pawn_attacking or
                                     is_a_queen_attacking or is_there_a_king_there)
@@ -147,7 +147,7 @@ class King(ChessPiece):
                 end_piece = board[end_row][end_col]
                         
                 if str(end_piece) != '--' and end_piece.is_white != self.is_white and end_piece.get_type()[1] == 'N':
-                    print("there is a knight attacking the king")
+                    # print("there is a knight attacking the king")
                     return True
 
         return False

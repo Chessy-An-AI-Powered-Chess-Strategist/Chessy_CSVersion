@@ -156,8 +156,8 @@ class GameState:
         king_piece = self.board[kings_location[0]][kings_location[1]]
 
         # collect pinned_pieces
-        if isinstance(king_piece, King):
-            pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
+        pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
+
 
         # if the king is in check
         if king_piece.is_check(self.board, kings_location):
