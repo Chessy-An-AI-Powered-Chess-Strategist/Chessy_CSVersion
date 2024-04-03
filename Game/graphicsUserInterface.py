@@ -1,7 +1,7 @@
 import pygame
 from Engine.Move import Move
 from Logic.pieces import Void
-from .settings import gui_settings
+from settings import gui_settings
 
 
 class GraphicsUserInterface:
@@ -304,3 +304,16 @@ class GraphicsUserInterface:
         A function that plays a sound.
         """
         self.settings["SOUNDS"][sound_name].play()
+
+
+if __name__ == '__main__':
+
+    import doctest
+    doctest.testmod()
+    import python_ta
+
+    python_ta.check_all(config={
+        'extra-imports': ['pygame', 'Engine.Move', 'Logic.pieces', 'Game.settings'],  # the names (strs) of imported modules
+        'allowed-io': [],  # the names (strs) of functions that call print/open/input
+        'max-line-length': 120
+    })
