@@ -96,7 +96,7 @@ class GraphicsUserInterface:
                         if move.is_capture:
                             s.fill(pygame.Color("red"))  # change color to red if the move is a capture move
                         elif move.is_enpassant_move:
-                            print("there is an enpassant move on the board")
+                            # print("there is an enpassant move on the board")
                             s.fill(pygame.Color("yellow"))
                         else:
                             s.fill(pygame.Color("yellow"))
@@ -148,7 +148,6 @@ class GraphicsUserInterface:
             elif e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_z:
                     self._undo_move(game_state)
-
         return True  # Tell running to continue
 
     def make_move(self, game_state, move_object, engine=None):

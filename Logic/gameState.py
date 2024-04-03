@@ -68,7 +68,7 @@ class GameState:
 
         # check to move kings
         if move.piece_moved.get_type()[1] == "K":
-            print("King move detected")
+            # print("King move detected")
             if move.piece_moved.is_white:
                 self.white_king_location = (move.end_row, move.end_col)
             else:
@@ -161,9 +161,9 @@ class GameState:
 
         # if the king is in check
         if king_piece.is_check(self.board, kings_location):
-            checks = king_piece.get_checks(self.board, kings_location)
+            checks = king_piece.get_checks(self.board, kings_location, pinned_pieces)
             self.in_check = True
-            print("The checks in the game", checks)
+            # print("The checks in the game", checks)
 
             if len(checks) == 1:
                 piece_checking = checks[0]
@@ -214,9 +214,9 @@ class GameState:
         if len(valid_moves) == 0:
             if king_piece.is_check(self.board, kings_location):
                 self.is_checkmate = True
-                print("Checkmate")
+                # print("Checkmate")
             else:
                 self.is_stalemate = True
-                print("Stalemate")
+                # print("Stalemate")
 
         return valid_moves

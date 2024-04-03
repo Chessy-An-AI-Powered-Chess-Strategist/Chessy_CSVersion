@@ -1,4 +1,6 @@
 from Logic.pieces import pawn
+
+
 class Move:
     # Positioning data for board and moves
     ranks_to_rows = {"1": 7, "2": 6, "3": 5, "4": 4,
