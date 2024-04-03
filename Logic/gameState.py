@@ -107,20 +107,20 @@ class GameState:
             self.board[move.end_row][move.end_col] = Void()
             self.board[move.start_row][move.end_col] = move.piece_captured
             self.enpassant_coord = (move.end_row, move.end_col)
-            
+
         # check to revert castling move
         if move.is_castle_move:
 
             # check to remove castling move
             if move.end_col - move.start_col == 2:  # king side
                 rook_location = (7, 7) if move.piece_moved.is_white else (0, 7)
-                
+
                 self.board[rook_location[0]][rook_location[1]] = self.board[move.end_row][move.end_col - 1]
                 self.board[move.end_row][move.end_col - 1] = Void()
 
             else:  # queen side
                 rook_location = (7, 0) if move.piece_moved.is_white else (0, 0)
-                
+
                 self.board[rook_location[0]][rook_location[1]] = self.board[move.end_row][move.end_col + 1]
                 self.board[move.end_row][move.end_col + 1] = Void()
 
@@ -156,8 +156,8 @@ class GameState:
         king_piece = self.board[kings_location[0]][kings_location[1]]
 
         # collect pinned_pieces
-        pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
-
+        if isinstance(king_piece, King):
+            pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
 
         # if the king is in check
         if king_piece.is_check(self.board, kings_location):
