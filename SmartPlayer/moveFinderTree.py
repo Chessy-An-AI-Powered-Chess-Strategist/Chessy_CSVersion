@@ -45,20 +45,24 @@ class MoveFinderTree:
 
     def add_next_possible_moves(self, game_state: GameState):
 
+        copy_of_game_state = copy.deepcopy(game_state)
+
         if self.is_leaf():
             for next_possible_move in game_state.get_valid_moves_advanced():
-                self._next_valid_moves.append(MoveFinderTree(game_state, next_possible_move))
+                self._next_valid_moves.append(MoveFinderTree(copy_of_game_state, next_possible_move))
         else:
             for move in self._next_valid_moves:
-                copy_of_game_state = copy.deepcopy(game_state)
                 copy_of_game_state.make_move(move._move)
                 if not copy_of_game_state.is_checkmate and not copy_of_game_state.is_stalemate:
                     move.add_next_possible_moves(copy_of_game_state)
 
+                copy_of_game_state.undo_move()
+
     def find_next_best_move(self, game_state: GameState) -> Move:
+        copy_of_game_state = copy.deepcopy(game_state)
         turn_multiplier = 1 if game_state.white_to_move else -1
 
-        best_move, score = self.find_move_negamax(game_state, turn_multiplier)
+        best_move, score = self.find_move_negamax(copy_of_game_state, turn_multiplier)
         return best_move
 
     def find_move_negamax(self, game_state: GameState, turn_multiplier) -> (Move, int):

@@ -1,3 +1,5 @@
+import copy
+
 from .base.chessPiece import ChessPiece
 from ..move import Move
 from .void import Void
@@ -21,6 +23,9 @@ class King(ChessPiece):
         # print("King get moves")
 
         row, col = start
+
+        # copy the board
+        board = copy.deepcopy(board)
 
         directions = ((0, -1), (0, 1), (-1, 0), (1, 0), (1, 1), (1, -1), (-1, -1), (-1, 1))
 
@@ -88,6 +93,9 @@ class King(ChessPiece):
         A function that returns if the King is in check for the given player
         """
         row, col = start
+
+        # copy the board to avoid changing the original board
+        board = copy.deepcopy(board)
 
         row_moves = (-1, -1, -1, 0, 0, 1, 1, 1)
         col_moves = (-1, 0, 1, -1, 1, -1, 0, 1)
@@ -158,6 +166,8 @@ class King(ChessPiece):
         """
         pinned_pieces = []
 
+        board = copy.deepcopy(board)
+
         row, col = start
 
         row_moves = (-1, -1, -1, 0, 0, 1, 1, 1)
@@ -211,6 +221,8 @@ class King(ChessPiece):
         col_moves = (-1, 0, 1, -1, 1, -1, 0, 1)
 
         assert len(row_moves) == len(col_moves)
+
+        board = copy.deepcopy(board)
 
         color = -1 if self.is_white else 1
 
