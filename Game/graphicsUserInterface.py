@@ -1,12 +1,29 @@
+"""
+graphicsUserInterface
+"""
 import pygame
 from Engine.Move import Move
-from Logic.pieces import Void
 from settings import gui_settings
 
 
 class GraphicsUserInterface:
     """
     A class that is responsible for the graphics of the game
+
+    Instance Attributes:
+
+    - valid_moves: A list to store valid moves (initialized as None)
+    - settings: A dictionary containing game settings
+    - screen: Pygame display surface for drawing graphics
+    - clock: Pygame clock for managing frame rates
+    - sq_selected: A tuple representing the selected square on the board
+    - player_clicks: A list to store player clicks
+    - display_selected_highlights: A boolean flag to control display highlights
+
+    Representation Invariants:
+    - self.settings must contain keys 'WIDTH', 'HEIGHT', 'DIMENSION', 'SQ_SIZE', 'IMAGES', and 'SOUNDS'
+    - self.sq_selected must be a tuple of length 2 containing valid row and column indices, or an empty
+      tuple if no square is selected
     """
 
     def __init__(self, settings: dict):
@@ -102,18 +119,6 @@ class GraphicsUserInterface:
                             s.fill(pygame.Color("yellow"))
                         self.screen.blit(s, (
                             move.end_col * self.settings["SQ_SIZE"], move.end_row * self.settings["SQ_SIZE"]))
-        # if self.sq_selected != ():
-        #     r, c = self.sq_selected[0], self.sq_selected[1]
-        #     if game_state.board[r][c].is_white == game_state.white_to_move:  # sq_selected is a piece that can be moved
-        #         s = pygame.Surface((self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
-        #         s.set_alpha(100)  # transparency value
-        #         s.fill(pygame.Color("blue"))
-        #         self.screen.blit(s, (c * self.settings["SQ_SIZE"], r * self.settings["SQ_SIZE"]))
-        #         s.fill(pygame.Color("yellow"))
-        #         for move in game_state.get_valid_moves():
-        #             if move.start_row == r and move.start_col == c:
-        #                 self.screen.blit(s, (
-        #                 move.end_col * self.settings["SQ_SIZE"], move.end_row * self.settings["SQ_SIZE"]))
 
     def handle_events(self, game_state):
         """
@@ -226,9 +231,14 @@ class GraphicsUserInterface:
 
             if str(move.piece_moved) != "--":
 
-                self.screen.blit(self.settings["IMAGES"][move.piece_moved.get_type()],
-                                    pygame.Rect(int(c * self.settings["SQ_SIZE"]), int(r * self.settings["SQ_SIZE"]),
-                                                 self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
+                a = self.settings["IMAGES"][move.piece_moved.get_type()]
+                b = int(c * self.settings["SQ_SIZE"])
+                d = int(r * self.settings["SQ_SIZE"])
+                e = self.settings["SQ_SIZE"]
+                self.screen.blit(a, pygame.Rect(b, d, e, e))
+                # self.screen.blit(self.settings["IMAGES"][move.piece_moved.get_type()],
+                #                     pygame.Rect(int(c * self.settings["SQ_SIZE"]), int(r * self.settings["SQ_SIZE"]),
+                #                                  self.settings["SQ_SIZE"], self.settings["SQ_SIZE"]))
 
             # check for castling move
             if move.is_castle_move:
@@ -273,7 +283,6 @@ class GraphicsUserInterface:
             pygame.display.flip()
             self.clock.tick(60)
 
-        # play relevant sounds # ToDo: Audio Fix needed
         if game_state.is_checkmate:
             self._play_sound("game_end")
 
@@ -313,7 +322,7 @@ if __name__ == '__main__':
     import python_ta
 
     python_ta.check_all(config={
-        'extra-imports': ['pygame', 'Engine.Move', 'Logic.pieces', 'Game.settings'],  # the names (strs) of imported modules
+        'extra-imports': ['pygame', 'Engine.Move', 'Logic.pieces', 'Game.settings'],
         'allowed-io': [],  # the names (strs) of functions that call print/open/input
         'max-line-length': 120
     })
