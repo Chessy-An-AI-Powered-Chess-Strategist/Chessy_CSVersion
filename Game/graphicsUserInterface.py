@@ -160,12 +160,12 @@ class GraphicsUserInterface:
         """
         self.valid_moves = game_state.get_valid_moves_advanced()
 
-        print("move object", move_object)
+        # print("move object", move_object)
         for i in range(len(self.valid_moves)):
 
             # print("i:", self.valid_moves[i])
             if str(move_object) == str(self.valid_moves[i]):
-                print("valid_move:", self.valid_moves[i])
+                # print("valid_move:", self.valid_moves[i])
 
                 move_object.is_capture = self.valid_moves[i].is_capture
 
@@ -174,7 +174,7 @@ class GraphicsUserInterface:
 
                 # animate move
                 self._animate_move(game_state, self.valid_moves[i])
-                print(game_state.board)
+                # print(game_state.board)
                 # print(self.valid_moves_for_highlights)
 
                 # display the move

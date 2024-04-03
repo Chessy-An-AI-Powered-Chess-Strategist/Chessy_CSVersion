@@ -67,7 +67,6 @@ class GameState:
         else:
             self.enpassant_coord = ()
 
-
         # record moving form piece
         move.piece_moved.piece_moved()
 
@@ -148,22 +147,17 @@ class GameState:
 
         king_piece = self.board[kings_location[0]][kings_location[1]]
 
-<<<<<<< Updated upstream
         # collect pinned_pieces
         pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
 
         # print(pinned_pieces)
         # print("Is in check:", self.in_check)
         # print("Is king actually in check:", king_piece.is_check(self.board, kings_location))
-=======
-        pinned_pieces = king_piece.get_pinned_pieces(self.board, kings_location)
 
-        print(pinned_pieces)
->>>>>>> Stashed changes
 
         # if the king is in check
         if king_piece.is_check(self.board, kings_location):
-            checks = king_piece.get_checks(self.board, kings_location)
+            checks = king_piece.get_checks(self.board, kings_location, pinned_pieces)
             self.in_check = True
 
             if len(checks) == 1:

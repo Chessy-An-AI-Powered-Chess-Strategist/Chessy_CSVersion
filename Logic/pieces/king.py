@@ -26,7 +26,7 @@ class King(ChessPiece):
 
         color = -1 if self.is_white else 1  # -1 for white, 1 for black
 
-        for i in range(0, 8):
+        for i in range(1, 8):
             # build all combinations of moves with the row and col moves
             end_row = row + directions[i][0]
             end_col = col + directions[i][1]
@@ -72,7 +72,7 @@ class King(ChessPiece):
         squares_under_attack = []
 
         for row in range(8):
-            for col in range(8):
+            for col in range(1, 8):
                 piece = board[row][col]
                 if piece.is_white != is_white and str(piece) != '--':
                     # Get the moves of the opponent's piece
@@ -89,6 +89,8 @@ class King(ChessPiece):
         """
         row, col = start
 
+        print("kings_location", start)
+
         row_moves = (-1, -1, -1, 0, 0, 1, 1, 1)
         col_moves = (-1, 0, 1, -1, 1, -1, 0, 1)
 
@@ -101,9 +103,12 @@ class King(ChessPiece):
             end_row_dir = row_moves[j]
             end_col_dir = col_moves[j]
 
-            for i in range(8):
+            for i in range(1, 8):
                 end_row = row + end_row_dir * i
                 end_col = col + end_col_dir * i
+
+
+                print("Now cehking: ", (end_row, end_col))
 
                 # check if the end square is within the board
                 if 0 <= end_row < 8 and 0 <= end_col < 8:
@@ -119,22 +124,21 @@ class King(ChessPiece):
                     elif str(end_piece) != '--':
 
                         # check if the piece is attacking the king
-                        is_a_rook_attacking = end_piece.get_type() == 'R' and (end_row == 0 or end_col == 0)  # horizontal or vertical
-                        is_a_bishop_attacking = end_piece.get_type() == 'B' and (end_row != 0 and end_col != 0)  # diagonal
-                        is_a_pawn_attacking = end_piece.get_type() == "p" and end_row == row + color and (end_col == col + end_col_dir)
-                        is_a_queen_attacking = end_piece.get_type() == 'Q'
-                        is_there_a_king_there = i == 1 and end_piece.get_type() == 'K'
+                        is_a_rook_attacking = end_piece.get_type()[1] == 'R' and (end_row == 0 or end_col == 0)  # horizontal or vertical
+                        is_a_bishop_attacking = end_piece.get_type()[1] == 'B' and (end_row != 0 and end_col != 0)  # diagonal
+                        is_a_pawn_attacking = end_piece.get_type()[1] == "p" and end_row == row + color and (end_col == col + end_col_dir)
+                        is_a_queen_attacking = end_piece.get_type()[1] == 'Q'
+                        is_there_a_king_there = i == 1 and end_piece.get_type()[1] == 'K'
 
                         is_check = (is_a_rook_attacking or is_a_bishop_attacking or is_a_pawn_attacking or
                                     is_a_queen_attacking or is_there_a_king_there)
 
                         if is_check:
-                            # print("King is in check")
+                            print("King is in check")
                             return True
                 else:
                     break
 
-                # ToDo: Implement Knight checks
                 # Check for knight checks
                 knight_moves = ((-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1))
                 for m in knight_moves:
@@ -153,7 +157,7 @@ class King(ChessPiece):
         """
         A function that returns the pinned pieces on the baord for the given plqyer
         """
-        print('pinned pieces called')
+        # print('pinned pieces called')
         row, col = start
 
         pinned_pieces = []
@@ -177,7 +181,7 @@ class King(ChessPiece):
 
                         # check if the king is in check
                         if self.is_check(board, (row, col)):
-                            print('found pinned piece')
+                            # print('found pinned piece')
                             pinned_pieces.append(temp_piece)
 
                         # put the piece back
@@ -206,9 +210,11 @@ class King(ChessPiece):
             end_row_dir = row_moves[j]
             end_col_dir = col_moves[j]
 
-            for i in range(8):
+            for i in range(1, 8):
                 end_row = row + end_row_dir * i
                 end_col = col + end_col_dir * i
+
+                print("Now Checking: ", (end_row, end_col))
 
                 # check if the end square is within the board
                 if 0 <= end_row < 8 and 0 <= end_col < 8:
@@ -236,7 +242,7 @@ class King(ChessPiece):
                                     is_a_queen_attacking or is_there_a_king_there)
 
                         if is_check:
-                            # print("King is in check")
+                            print("King is in check")
                             checks.append((end_piece, end_row, end_col))
                 else:
                     break
