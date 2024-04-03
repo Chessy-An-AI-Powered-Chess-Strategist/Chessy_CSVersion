@@ -5,7 +5,6 @@ from __future__ import annotations
 from Game.game import main
 
 
-
 def run() -> None:
     """
     A function to run the Chess Game
@@ -14,7 +13,7 @@ def run() -> None:
 
 
 if __name__ == '__main__':
-    # run()
+    run()
 
     import doctest
     doctest.testmod()
