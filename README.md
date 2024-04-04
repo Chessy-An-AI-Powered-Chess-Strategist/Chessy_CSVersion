@@ -20,6 +20,18 @@ To develop a chess engine that utilizes a tree structure to map out possible mov
 3. Bot Chess Player: We also made a computer player you can play against. It's like having a virtual opponent when you want to practice on your own.
 
 
+# Resources Used:
+## Knoledge based resources:
+- Chess engine article from Cornell University: https://www.cs.cornell.edu/boom/2004sp/ProjectArch/Chess/algorithms.html
+- Chess Engine in Python by Eddie Sharick: https://youtu.be/EnYui0e73Rs?si=PV5_Up-VEutjJb9Q
+- Graphics (Open source) : https://opengameart.org/content/madwares-chess-set
+- Note: There where no datasets used in this project. The data that the tree works with is dynamically generated as the game progresses to save memory and make program more efficient.
+## Developer tools:
+- OpenAI's Chat GPT (Helped with writing comments and reports)
+- Github Copilot (Develppers coding assistant)
+- Github (Teams version control system)
+- Jetbrains Qodana (Analize software vanerabilities)
+
 # Timeline (3 Weeks)
 
 ## Week 1: Setup and Initial Development
@@ -32,6 +44,24 @@ To develop a chess engine that utilizes a tree structure to map out possible mov
 ## Week 3: Develop chess logic and minimax algorithms
 - Develop the logic for each piece in the game
 - Impliment the minimax algorithm so the bots can play instead of players
+
+# How to run program:
+1. Intall the required packages int eh requirements.txt file:
+   ```python pip install -r requirements.txt```
+
+2. Choose the mode you like to play in the `game/game.py` file:
+   - If you wish to play player vs player:
+   ```css
+       # define player states
+       is_player_white_human = True
+       is_player_black_human = True
+   ```
+   - If you wish to see the bots play against each other:
+    ```css
+      # define player states
+      is_player_white_human = False
+      is_player_black_human = False
+    ```
 
 
 
