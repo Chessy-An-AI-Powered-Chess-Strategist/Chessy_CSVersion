@@ -56,7 +56,7 @@ To develop a chess engine that utilizes a tree structure to map out possible mov
        is_player_white_human = True
        is_player_black_human = True
    ```
-   Note: Only int he player vs player mode you can undo a move by pressing the button z.
+   Note: Only in the player vs player mode you can undo a move by pressing the button z.
    - If you wish to see the bots play against each other:
     ```css
       # define player states
