@@ -56,12 +56,15 @@ To develop a chess engine that utilizes a tree structure to map out possible mov
        is_player_white_human = True
        is_player_black_human = True
    ```
+   Note: Only int he player vs player mode you can undo a move by pressing the button z.
    - If you wish to see the bots play against each other:
     ```css
       # define player states
       is_player_white_human = False
       is_player_black_human = False
     ```
+
+3. Run the `main.py` file in the directory and the code will start working
 
 
 
