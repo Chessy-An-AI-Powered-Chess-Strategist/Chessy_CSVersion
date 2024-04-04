@@ -14,8 +14,8 @@ p.init()
 
 
 # define player states
-is_player_white_human = False
-is_player_black_human = False
+is_player_white_human = True
+is_player_black_human = True
 
 
 def main() -> None:
@@ -28,12 +28,12 @@ def main() -> None:
     graphics = GraphicsUserInterface(gui_settings)
     game_state = GameState()
 
-    engine = Engine(game_state) if not IS_PLAYER_BLACK_HUMAN or not IS_PLAYER_WHITE_HUMAN else None
+    engine = Engine(game_state) if not is_player_black_human or not is_player_white_human else None
 
     running = True
     while running:
-        cond1 = game_state.white_to_move and IS_PLAYER_WHITE_HUMAN
-        cond2 = not game_state.white_to_move and IS_PLAYER_BLACK_HUMAN
+        cond1 = game_state.white_to_move and is_player_white_human
+        cond2 = not game_state.white_to_move and is_player_black_human
         human_turn = cond1 or cond2
         running = graphics.handle_events(game_state)
         graphics.draw_game_state(game_state)

@@ -3,7 +3,7 @@ graphicsUserInterface
 """
 import pygame
 from Engine.Move import Move
-from settings import gui_settings
+from.settings import gui_settings
 
 
 class GraphicsUserInterface:

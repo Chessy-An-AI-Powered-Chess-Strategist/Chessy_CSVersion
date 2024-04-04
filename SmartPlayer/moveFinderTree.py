@@ -13,27 +13,27 @@ class MoveFinderTree:
     """
     A tree structure to find the best move
     """
-    _move: Move or None
-    _next_valid_moves: list[MoveFinderTree]
+    move: Move or None
+    next_valid_moves: list[MoveFinderTree]
     _is_whites_move: bool
 
     def __init__(self, game_state: GameState, move: Move = None):
 
-        self._move = move
-        self._next_valid_moves = []
+        self.move = move
+        self.next_valid_moves = []
         self._is_whites_move = game_state.white_to_move
 
     def is_root(self):
         """
         Check if the tree is the root
         """
-        return not isinstance(self._move, Move)
+        return not isinstance(self.move, Move)
 
     def is_leaf(self):
         """
         Check if the tree is a leaf
         """
-        return len(self._next_valid_moves) == 0
+        return len(self.next_valid_moves) == 0
 
     def get_depth(self):
         """
@@ -50,11 +50,11 @@ class MoveFinderTree:
 
         if self.is_leaf():
             for next_possible_move in copy_of_game_state.get_valid_moves_advanced():
-                self._next_valid_moves.append(MoveFinderTree(copy_of_game_state, next_possible_move))
+                self.next_valid_moves.append(MoveFinderTree(copy_of_game_state, next_possible_move))
         else:
-            for move in self._next_valid_moves:
-                copy_of_game_state.make_move(move._move)
-                
+            for move in self.next_valid_moves:
+                copy_of_game_state.make_move(move.move)
+
                 move.add_next_possible_moves(copy_of_game_state)
 
                 copy_of_game_state.undo_move()
@@ -74,24 +74,24 @@ class MoveFinderTree:
             return None, turn_multiplier * board_evaluation(game_state)
 
         else:
-            random.shuffle(self._next_valid_moves)
-            for move in self._next_valid_moves:
-                game_state.make_move(move._move)
+            random.shuffle(self.next_valid_moves)
+            for move in self.next_valid_moves:
+                game_state.make_move(move.move)
                 score = -move.find_move_negamax(game_state, -turn_multiplier)[1]
 
                 if score > max_score:
                     max_score = score
-                    next_move = self._move
+                    next_move = self.move
 
                     if self.is_root():
-                        next_move = move._move
+                        next_move = move.move
 
                 game_state.undo_move()
 
             return next_move, max_score
 
     def print_tree(self, indent=0):
-        print(' ' * indent + str(self._move), self._is_whites_move)
+        print(' ' * indent + str(self.move), self._is_whites_move)
         for child in self._next_valid_moves:
             child.print_tree(indent + 2)
 
@@ -101,7 +101,7 @@ class MoveFinderTree:
 
 
         def add_edges(node, parent=None):
-            labels[str(node._move)] = str(node._move)
+            labels[str(node.move)] = str(node.move)
             if parent is not None:
                 G.add_edge(id(parent), id(node))
             for child in node._next_valid_moves:
@@ -149,9 +149,9 @@ class MoveFinderTree:
 
     def move_down(self, move: Move):
         """move down the tree"""
-        for node in self._next_valid_moves:
-            if node._move.move_id == move.move_id:
-                self._next_valid_moves = node._next_valid_moves
+        for node in self.next_valid_moves:
+            if node.move.move_id == move.move_id:
+                self.next_valid_moves = node.next_valid_moves
                 self._is_whites_move = node._is_whites_move
 
                 break

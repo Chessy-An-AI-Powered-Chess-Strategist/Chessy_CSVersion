@@ -193,19 +193,19 @@ class GameState:
                     piece = self.board[row][col]
                     # check specifically for enpassant moves
                     if piece.get_type() == "wp" or "bp":
-                        if (row + 1, col + 1) == self.enpassant_coord:
+                        if (row + 1, col + 1) == self.enpassant_coord and self.board[row + 1][col + 1].is_white != self.white_to_move:
                             valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col + 1), board=self.board,
                                                     is_enpassant_move=True))
 
-                        if (row + 1, col - 1) == self.enpassant_coord:
+                        if (row + 1, col - 1) == self.enpassant_coord and self.board[row + 1][col + 1].is_white != self.white_to_move:
                             valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col - 1), board=self.board,
                                                     is_enpassant_move=True))
 
-                        if (row - 1, col + 1) == self.enpassant_coord:
+                        if (row - 1, col + 1) == self.enpassant_coord and self.board[row + 1][col + 1].is_white != self.white_to_move:
                             valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col + 1), board=self.board,
                                                     is_enpassant_move=True))
 
-                        if (row - 1, col - 1) == self.enpassant_coord:
+                        if (row - 1, col - 1) == self.enpassant_coord and self.board[row + 1][col + 1].is_white != self.white_to_move:
                             valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col - 1), board=self.board,
                                                     is_enpassant_move=True))
 
