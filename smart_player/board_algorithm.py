@@ -81,7 +81,7 @@ piece_values = {
     "B": 3,
     "R": 5,
     "Q": 9,
-    "k": 1000  # High value to represent the importance of the King
+    "K": 1000  # High value to represent the importance of the King
 }
 
 
@@ -167,7 +167,7 @@ def board_evaluation(game_state: GameState) -> int:
         for col in range(0, 8):
             piece = board[row][col]
             if piece.get_type() != "--" and game_state.white_to_move == piece.is_white:
-                score += piece_values[piece.get_type()]
+                score += piece_values[piece.get_type()[1]]
                 score += get_piece_score((row, col), piece.is_white, board)
 
     return score

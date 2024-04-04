@@ -2,5 +2,5 @@
 
 tree_settings = {
     "DEPTH": 2,
-    "SAMPLE_SIZE": 5
+    "SAMPLE_SIZE": 7
 }
