@@ -13,20 +13,7 @@ def run() -> None:
     """
     main()
 
-    # code to test the tree
-    # game_state = GameState()
-    #
-    # engine = Engine(game_state)
 
-    # print(engine.tree.get_depth())
-    #
-    # for i in range(20):
-    #     next_move = engine.find_best_move_tree(game_state, game_state.get_valid_moves_advanced())
-    #
-    #     game_state.make_move(next_move)
-    #
-    #     print("Next_move", next_move)
-    #     print(str(game_state))
 
 
 if __name__ == '__main__':

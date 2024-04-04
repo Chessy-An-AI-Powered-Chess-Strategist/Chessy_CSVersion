@@ -1,7 +1,9 @@
-import pygame as p
 """
 Set Up Settings for the GUI
 """
+
+import pygame as p
+
 
 gui_settings = {
     "WIDTH": 512,

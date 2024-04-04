@@ -151,6 +151,7 @@ class GameState:
 
         kings_location = self.get_kings_location()
 
+        # print("The kings location", kings_location)
         assert self.board[kings_location[0]][kings_location[1]].get_type()[1] == "K"
 
         king_piece = self.board[kings_location[0]][kings_location[1]]

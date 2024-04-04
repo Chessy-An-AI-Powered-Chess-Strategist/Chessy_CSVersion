@@ -69,15 +69,3 @@ class ChessPiece:
         if self.num_of_moves_made == 0:
             self.is_first_move = True
 
-
-if __name__ == '__main__':
-
-    import doctest
-    doctest.testmod()
-    import python_ta
-
-    python_ta.check_all(config={
-        'extra-imports': ['Game', 'SmartPlayer', 'Logic'],  # the names (strs) of imported modules
-        'allowed-io': [],  # the names (strs) of functions that call print/open/input
-        'max-line-length': 120
-    })

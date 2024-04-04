@@ -6,6 +6,7 @@ from plotly.graph_objs import Scatter, Figure
 
 from Logic import Move, GameState
 from .boardAlgorithms import board_evaluation
+import random
 
 
 class MoveFinderTree:
@@ -48,13 +49,13 @@ class MoveFinderTree:
         copy_of_game_state = copy.deepcopy(game_state)
 
         if self.is_leaf():
-            for next_possible_move in game_state.get_valid_moves_advanced():
+            for next_possible_move in copy_of_game_state.get_valid_moves_advanced():
                 self._next_valid_moves.append(MoveFinderTree(copy_of_game_state, next_possible_move))
         else:
             for move in self._next_valid_moves:
                 copy_of_game_state.make_move(move._move)
-                if not copy_of_game_state.is_checkmate and not copy_of_game_state.is_stalemate:
-                    move.add_next_possible_moves(copy_of_game_state)
+                
+                move.add_next_possible_moves(copy_of_game_state)
 
                 copy_of_game_state.undo_move()
 
@@ -73,6 +74,7 @@ class MoveFinderTree:
             return None, turn_multiplier * board_evaluation(game_state)
 
         else:
+            random.shuffle(self._next_valid_moves)
             for move in self._next_valid_moves:
                 game_state.make_move(move._move)
                 score = -move.find_move_negamax(game_state, -turn_multiplier)[1]
