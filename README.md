@@ -66,6 +66,33 @@ To develop a chess engine that utilizes a tree structure to map out possible mov
 
 3. Run the `main.py` file in the directory and the code will start working
 
+# About Software:
+
+## Data Flow Diagram:
+The follwoing is the software arcitecture and how each module communicates with one another in the code and what data they transfer to one another
+# ToDo
+
+## Algorithms:
+In this project we where required to develop and impliment many advanced algorithms. Here are a list of the main ones:
+1. The Negamax Algorithm: This algorithm is the advanced version of minimax that we have used in the tree to go thoruhg all the possibilities, minimize the oponens score and maximize its own score. The Negamax algorithm playes the core part of the decision making process of the chess bots.
+2. The king is check algorithm: This algorithm checks the kings position and weather or not the king is in check. The problem with this algorithm was its efficiency as it was being called multiple times in each turn.
+3. Pieces get move algorithms: Each move on the chess board also had a get moves method which would generate the possible moves that algorithm could make. All pieces in the code inheriete properties from the `chess_piece` class which has a not implimented method called `get_moves`. All the poiueces on the bord impliment this method with their own special algorithm with generates how they can move. coding these was also a major challange of the project.
+
+## Graphics:
+The graphics of the game was also implimented using a layered structure where smaller methods each generate a layer of content on top of each other to geenrate the userfriendly easy to use interface. The layers are as follows from the top to bottom:
+
+1. Displayed text 
+2. Chess pieces
+3. Movement highloights
+4. Board graphics
+
+This structure allowed us to create a smooth and dynamic user experiecne as everytime the page would update only the related section would change making in more efficient. Not that the order the layers where gerated where from number 4 to 1.
+
+
+
+# Chenges we made:
+
+# Project refelection:
 
 
 
