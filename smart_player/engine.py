@@ -62,10 +62,12 @@ class Engine:
         # move the tree down
         self.tree.move_down(best_move)
 
+        copy_of_game_state = copy.deepcopy(game_state)
+
         # generate teh next layer
-        self.tree.add_next_possible_moves(game_state)
+        self.tree.add_next_possible_moves(copy_of_game_state)
 
         return best_move
 
     def record_a_move_made(self, move):
-        self.tree.move_down(move, self.game_state)
+        self.tree.move_down(move)

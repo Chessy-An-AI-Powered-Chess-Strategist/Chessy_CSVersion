@@ -46,20 +46,22 @@ class MoveFinderTree:
 
     def add_next_possible_moves(self, game_state: GameState):
 
-        copy_of_game_state = copy.deepcopy(game_state)
-
         if self.is_leaf():
-            for next_possible_move in copy_of_game_state.get_valid_moves_advanced():
-                self.next_valid_moves.append(MoveFinderTree(copy_of_game_state, next_possible_move))
+
+            all_possible_moves = game_state.get_valid_moves_advanced()
+
+            sampled_moves = random.sample(all_possible_moves, min(5, len(all_possible_moves)))
+
+            for next_possible_move in sampled_moves:
+                self.next_valid_moves.append(MoveFinderTree(game_state, next_possible_move))
         else:
             for move in self.next_valid_moves:
                 try:
-                    copy_of_game_state.make_move(move.move)
+                    game_state.make_move(move.move)
 
-                    move.add_next_possible_moves(copy_of_game_state)
+                    move.add_next_possible_moves(game_state)
 
-                    copy_of_game_state.undo_move()
-
+                    game_state.undo_move()
                 except Exception as e:
                     pass
 

@@ -317,8 +317,6 @@ class GraphicsUserInterface:
 
 if __name__ == '__main__':
 
-    import doctest
-    doctest.testmod()
     import python_ta
 
     python_ta.check_all(config={

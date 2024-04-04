@@ -20,8 +20,7 @@ class Bishop(ChessPiece):
 
         if self in pinned_pieces:
             return
-        
-        
+
         # directions = up-left, up-right, down-right, down-left
         directions = ((-1, -1), (1, -1), (1, 1), (-1, 1))
 
