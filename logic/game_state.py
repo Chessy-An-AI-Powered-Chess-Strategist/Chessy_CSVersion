@@ -2,7 +2,7 @@ import copy
 
 import numpy as np
 from .pieces import *
-from .pieces.base.chessPiece import ChessPiece
+from .pieces.base.chess_piece import ChessPiece
 from .move import Move
 
 

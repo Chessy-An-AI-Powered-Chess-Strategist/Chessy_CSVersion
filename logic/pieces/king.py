@@ -1,6 +1,6 @@
 import copy
 
-from .base.chessPiece import ChessPiece
+from .base.chess_piece import ChessPiece
 from ..move import Move
 from .void import Void
 # from Engine.gameState import CastleRights

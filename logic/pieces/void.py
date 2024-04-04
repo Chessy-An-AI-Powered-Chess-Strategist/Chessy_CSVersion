@@ -1,4 +1,4 @@
-from .base.chessPiece import ChessPiece
+from .base.chess_piece import ChessPiece
 
 
 class Void(ChessPiece):
