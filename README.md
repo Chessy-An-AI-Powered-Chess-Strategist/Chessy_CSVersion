@@ -67,10 +67,7 @@ To develop a chess engine that utilizes a tree structure to map out possible mov
 3. Run the `main.py` file in the directory and the code will start working
 
 # About Software:
-
-## Data Flow Diagram:
-The follwoing is the software arcitecture and how each module communicates with one another in the code and what data they transfer to one another
-# ToDo
+In this project we explored many difffrent areas and had to work on so many diffrent things. here is a list of the most advanced stuff we implimented:
 
 ## Algorithms:
 In this project we where required to develop and impliment many advanced algorithms. Here are a list of the main ones:
@@ -88,6 +85,10 @@ The graphics of the game was also implimented using a layered structure where sm
 
 This structure allowed us to create a smooth and dynamic user experiecne as everytime the page would update only the related section would change making in more efficient. Not that the order the layers where gerated where from number 4 to 1.
 
+## Working with data in the prediction tree:
+- The `move_finder_tree` is a tree structure that records all the possible moves for all the possible players so the negamax algorithm can recursivly go thorugh it and find the bast move. The original goal of this project was to load a dataset of 3.5 million games into the tree to evaluate the moves from there. Due to the limited computing power we had we decided to generate the next moves dinamically after each move.
+- The tree has this setting value called `DEPTH`. If depth is 4, the tree will generate 4 moves ahead of the current board position. This will make the minimax make a decision based in 4 moves ahead. they when a move is made, the unnecessary branches will get pruned and another layer is generated making the algorithm always run and see 4 moves ahead.
+- An issue this process has is that it is very slow and the algorithm has to loop though all the possible moves of the project. To speed this up, we have make a random sample of the next valid moves and we run the minimax in that small sample. However the better way is to use the alpha-beta prunning wich is a bit complex and is our of the scope of our project. 
 
 
 # Chenges we made:
