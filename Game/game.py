@@ -1,11 +1,13 @@
-
+"""
+Game file
+"""
 # imports
-from Game.settings import gui_settings
-from Game.graphicsUserInterface import GraphicsUserInterface
-import pygame as p
 from Logic import GameState
+import pygame as p
 import Engine.SmartMoveFinderTest as smf
 from SmartPlayer import Engine
+from Game.settings import gui_settings
+from Game.graphicsUserInterface import GraphicsUserInterface
 
 #  initialize pygame object
 p.init()
@@ -16,7 +18,7 @@ is_player_white_human = False
 is_player_black_human = False
 
 
-def main():
+def main() -> None:
     """
     Entry point for the chess game.
 
@@ -26,12 +28,13 @@ def main():
     graphics = GraphicsUserInterface(gui_settings)
     game_state = GameState()
 
-    engine = Engine(game_state) if not is_player_black_human or not is_player_white_human else None
+    engine = Engine(game_state) if not IS_PLAYER_BLACK_HUMAN or not IS_PLAYER_WHITE_HUMAN else None
 
     running = True
     while running:
-        human_turn = ((game_state.white_to_move and is_player_white_human) or (not game_state.white_to_move and is_player_black_human))
-
+        cond1 = game_state.white_to_move and IS_PLAYER_WHITE_HUMAN
+        cond2 = not game_state.white_to_move and IS_PLAYER_BLACK_HUMAN
+        human_turn = cond1 or cond2
         running = graphics.handle_events(game_state)
         graphics.draw_game_state(game_state)
 
@@ -56,6 +59,3 @@ if __name__ == '__main__':
         'allowed-io': [],  # the names (strs) of functions that call print/open/input
         'max-line-length': 120
     })
-
-
-
