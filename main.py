@@ -2,7 +2,7 @@
 The main python file which starts the game.
 """
 from __future__ import annotations
-from Game import main
+from game import main
 # from SmartPlayer import Engine
 # from Logic import GameState
 
