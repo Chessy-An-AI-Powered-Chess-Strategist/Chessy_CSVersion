@@ -80,17 +80,22 @@ class MoveFinderTree:
         else:
             random.shuffle(self.next_valid_moves)
             for move in self.next_valid_moves:
-                game_state.make_move(move.move)
-                score = -move.find_move_negamax(game_state, -turn_multiplier)[1]
 
-                if score > max_score:
-                    max_score = score
-                    next_move = self.move
+                try:
+                    game_state.make_move(move.move)
+                    score = -move.find_move_negamax(game_state, -turn_multiplier)[1]
 
-                    if self.is_root():
-                        next_move = move.move
+                    if score > max_score:
+                        max_score = score
+                        next_move = self.move
 
-                game_state.undo_move()
+                        if self.is_root():
+                            next_move = move.move
+    
+                    game_state.undo_move()
+
+                except Exception as e:
+                    pass
 
             return next_move, max_score
 
