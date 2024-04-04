@@ -1,0 +1,123 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+\title{Chessy: A Chess Engine}
+\author{Group Members:\\Ali Rahbar\\Wilton James Miller\\Christian Fisla\\Daniel Rafailov}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Project Overview}
+Chessy is a fully implemented software created for users to play chess with friends or with bots. This project is being coded for our CSC111 class to demonstrate our understanding and mastery of the course content.
+
+\subsection*{Objective}
+To develop a chess engine that utilizes a tree structure to map out possible moves ahead (e.g., depth 4 for four moves ahead) and uses an algorithm to evaluate each move based on board positioning and piece values.
+
+\subsection*{Scope}
+\begin{enumerate}
+    \item Graphics User Interface: This is what you see on the screen when you play. It's where the chessboard and pieces are displayed, and where you make your moves.
+    \item Chess Logic Folder: Inside this folder, we wrote the code that controls how the game works. It's like the brain behind the game, making sure the pieces move correctly and following all the rules.
+    \item Bot Chess Player: We also made a computer player you can play against. It's like having a virtual opponent when you want to practice on your own.
+\end{enumerate}
+
+\section*{Resources Used}
+\subsection*{Knowledge-based resources:}
+\begin{itemize}
+    \item Chess engine article from Cornell University: \url{https://www.cs.cornell.edu/boom/2004sp/ProjectArch/Chess/algorithms.html}
+    \item Chess Engine in Python by Eddie Sharick: \url{https://youtu.be/EnYui0e73Rs?si=PV5_Up-VEutjJb9Q}
+    \item Graphics (Open source): \url{https://opengameart.org/content/madwares-chess-set}
+\end{itemize}
+\textbf{Note:} There were no datasets used in this project. The data that the tree works with is dynamically generated as the game progresses to save memory and make the program more efficient.
+
+\subsection*{Developer tools:}
+\begin{itemize}
+    \item OpenAI's Chat GPT (Helped with writing comments and reports)
+    \item Github Copilot (Developers coding assistant)
+    \item Github (Teams version control system)
+    \item Jetbrains Qodana (Analyze software vulnerabilities)
+\end{itemize}
+
+\section*{Timeline (3 Weeks)}
+\subsection*{Week 1: Setup and Initial Development}
+\begin{itemize}
+    \item Setup project environment using the python chess library (temporarily)
+    \item Start developing the tree structure for mapping moves.
+\end{itemize}
+\subsection*{Week 2: Setup software architecture and create user interface}
+\begin{itemize}
+    \item Develop and test the evaluation algorithm.
+    \item Created the User interface
+    \item Integrated the UI with basic tree and fix compatibility issues
+\end{itemize}
+\subsection*{Week 3: Develop chess logic and minimax algorithms}
+\begin{itemize}
+    \item Develop the logic for each piece in the game
+    \item Implement the minimax algorithm so the bots can play instead of players
+\end{itemize}
+
+\section*{How to run the program}
+\begin{enumerate}
+    \item Install the required packages in the requirements.txt file:\\
+    \texttt{pip install -r requirements.txt}
+    \item Choose the mode you like to play in the \texttt{game/game.py} file:
+    \begin{itemize}
+        \item If you wish to play player vs player:
+        \begin{verbatim}
+        # define player states
+        is_player_white_human = True
+        is_player_black_human = True
+        \end{verbatim}
+        \item If you wish to see the bots play against each other:
+        \begin{verbatim}
+        # define player states
+        is_player_white_human = False
+        is_player_black_human = False
+        \end{verbatim}
+    \end{itemize}
+    \item Run the \texttt{main.py} file in the directory and the code will start working.
+\end{enumerate}
+
+\section*{About Software:}
+In this project we explored many different areas and had to work on so many different things. Here is a list of the most advanced stuff we implemented:
+
+\subsection*{Algorithms:}
+In this project we were required to develop and implement many advanced algorithms. Here are a list of the main ones:
+\begin{enumerate}
+    \item[1.] The Negamax Algorithm: This algorithm is the advanced version of minimax that we have used in the tree to go through all the possibilities, minimize the opponent's score and maximize its own score. The Negamax algorithm plays the core part of the decision-making process of the chess bots.
+    \item[2.] The king is check algorithm: This algorithm checks the king's position and whether or not the king is in check. The problem with this algorithm was its efficiency as it was being called multiple times in each turn.
+    \item[3.] Pieces get move algorithms: Each move on the chess board also had a get moves method which would generate the possible moves that algorithm could make. All pieces in the code inherit properties from the \texttt{chess\_piece} class which has a not implemented method called \texttt{get\_moves}. All the pieces on the board implement this method with their own special algorithm which generates how they can move. Coding these was also a major challenge of the project.
+\end{enumerate}
+
+\subsection*{Graphics:}
+The graphics of the game were also implemented using a layered structure where smaller methods each generate a layer of content on top of each other to generate the user-friendly easy-to-use interface. The layers are as follows from the top to bottom:
+\begin{enumerate}
+    \item[1.] Displayed text
+    \item[2.] Chess pieces
+    \item[3.] Movement highlights
+    \item[4.] Board graphics
+\end{enumerate}
+This structure allowed us to create a smooth and dynamic user experience as every time the page would update only the related section would change making it more efficient. Note that the order the layers were generated were from number 4 to 1.
+
+\subsection*{Working with data in the prediction tree:}
+\begin{itemize}
+    \item The \texttt{move\_finder\_tree} is a tree structure that records all the possible moves for all the possible players so the Negamax algorithm can recursively go through it and find the best move. The original goal of this project was to load a dataset of 3.5 million games into the tree to evaluate the moves from there. Due to the limited computing power we had we decided to generate the next moves dynamically after each move.
+    \item The tree has this setting value called \texttt{DEPTH}. If depth is 4, the tree will generate 4 moves ahead of the current board position. This will make the minimax make a decision based on 4 moves ahead. When a move is made, the unnecessary branches will get pruned and another layer is generated making the algorithm always run and see 4 moves ahead.
+    \item An issue this process has is that it is very slow and the algorithm has to loop through all the possible moves of the project. To speed this up, we have made a random sample of the next valid moves and we run the minimax in that small sample. However, the better way is to use the alpha-beta pruning which is a bit complex and is out of the scope of our project.
+\end{itemize}
+
+\section*{Changes we made:}
+\begin{itemize}
+    \item There were many changes that we made to the project to make it more feasible. Firstly we were using a chess library but due to the efficiency problems, we had to code the engine ourselves.
+    \item Secondly, we changed the idea to use a neural network and just implemented the Negamax algorithm.
+\end{itemize}
+
+\section*{Project reflection:}
+Overall, we're pretty happy with what we've achieved. However, our code isn't flawless. We've encountered a few bugs, especially when it comes to generating moves for the pieces. These bugs sometimes cause the program to crash. Despite these issues, we've successfully met the main goal of our project, which was to create a chess-playing bot. Along the way, we've learned a great deal.
+
+We faced several challenges and limitations throughout the project. Firstly, not all team members were experienced with working on complex systems, so the learning curve was steep. Secondly, we had to rewrite our code multiple times due to problems with the software architecture, which made certain computations either impossible or very computationally intensive. Additionally, the language we used, Python, isn't ideal for high-performance applications. Given more time, we would probably reimplement the algorithms and improve the software architecture for better performance.
+
+
+\end{document}
