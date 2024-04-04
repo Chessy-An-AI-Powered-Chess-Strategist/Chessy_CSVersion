@@ -1,10 +1,10 @@
 # Chessy
 
 ## Group Members:
-- Ali Rahbar (Student Number: 1010207964)
-- ...
-- ...
-- ...
+- Ali Rahbar
+- Wilton James Miller
+- Christian Fisla
+- Daniel Rafailov
 
 # Project Overview:
 
@@ -92,8 +92,13 @@ This structure allowed us to create a smooth and dynamic user experiecne as ever
 
 
 # Chenges we made:
+- There where many changes that we made to the project to make it more fiesable. Firstly we where using a chess libary but due to the efficiancy problems, we havd to code the enigne ourselfs. 
+- Secondly we chenged the idea to use a nural network and jut implimented teh negamax algorithm. 
 
 # Project refelection:
+Overall, we're pretty happy with what we've achieved. However, our code isn't flawless. We've encountered a few bugs, especially when it comes to generating moves for the pieces. These bugs sometimes cause the program to crash. Despite these issues, we've successfully met the main goal of our project, which was to create a chess-playing bot. Along the way, we've learned a great deal.
+
+We faced several challenges and limitations throughout the project. Firstly, not all team members were experienced with working on complex systems, so the learning curve was steep. Secondly, we had to rewrite our code multiple times due to problems with the software architecture, which made certain computations either impossible or very computationally intensive. Additionally, the language we used, Python, isn't ideal for high-performance applications. Given more time, we would probably reimplement the algorithms and improve the software architecture for better performance.
 
 
 
