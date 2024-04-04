@@ -14,8 +14,8 @@ p.init()
 
 
 # define player states
-is_player_white_human = True
-is_player_black_human = True
+is_player_white_human = False
+is_player_black_human = False
 
 
 def main() -> None:

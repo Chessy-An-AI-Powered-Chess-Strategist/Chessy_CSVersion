@@ -42,7 +42,7 @@ class MoveFinderTree:
         if self.is_leaf():
             return 0
         else:
-            return max([next_possible_move.get_depth() for next_possible_move in self._next_valid_moves] + [0]) + 1
+            return max([next_possible_move.get_depth() for next_possible_move in self.next_valid_moves] + [0]) + 1
 
     def add_next_possible_moves(self, game_state: GameState):
 
@@ -53,11 +53,15 @@ class MoveFinderTree:
                 self.next_valid_moves.append(MoveFinderTree(copy_of_game_state, next_possible_move))
         else:
             for move in self.next_valid_moves:
-                copy_of_game_state.make_move(move.move)
+                try:
+                    copy_of_game_state.make_move(move.move)
 
-                move.add_next_possible_moves(copy_of_game_state)
+                    move.add_next_possible_moves(copy_of_game_state)
 
-                copy_of_game_state.undo_move()
+                    copy_of_game_state.undo_move()
+
+                except Exception as e:
+                    pass
 
     def find_next_best_move(self, game_state: GameState) -> Move:
         copy_of_game_state = copy.deepcopy(game_state)
@@ -92,7 +96,7 @@ class MoveFinderTree:
 
     def print_tree(self, indent=0):
         print(' ' * indent + str(self.move), self._is_whites_move)
-        for child in self._next_valid_moves:
+        for child in self.next_valid_moves:
             child.print_tree(indent + 2)
 
     def draw_tree(self):
@@ -104,7 +108,7 @@ class MoveFinderTree:
             labels[str(node.move)] = str(node.move)
             if parent is not None:
                 G.add_edge(id(parent), id(node))
-            for child in node._next_valid_moves:
+            for child in node.next_valid_moves:
                 add_edges(child, node)
 
         add_edges(self)

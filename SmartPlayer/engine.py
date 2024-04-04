@@ -29,7 +29,7 @@ class Engine:
 
         else:
             random.shuffle(tree.next_valid_moves)
-            print("The next valid moves", tree.next_valid_moves)
+            # print("The next valid moves", tree.next_valid_moves)
             for move in tree.next_valid_moves:
 
                 game_state.make_move(move.move)

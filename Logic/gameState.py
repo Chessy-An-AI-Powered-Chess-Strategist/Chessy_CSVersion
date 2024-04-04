@@ -88,6 +88,9 @@ class GameState:
                 self.board[move.end_row][move.end_col + 1] = self.board[rook_location[0]][rook_location[1]]
                 self.board[rook_location[0]][rook_location[1]] = Void()
 
+        # check for checkmate
+        self.get_valid_moves_advanced()
+
     def undo_move(self):
         if len(self.move_log) == 0:
             return
@@ -170,16 +173,23 @@ class GameState:
                 piece_checking = checks[0]
                 check_row, check_col = piece_checking[0], piece_checking[1]
 
-                # collect teh list of all moves
+                # collect the list of all moves
                 valid_moves = self.get_valid_moves(pinned_pieces)
+                # print("-----")
 
                 for valid_move in copy.deepcopy(valid_moves):
+                    print(str(valid_move), )
 
                     # make the move
                     self.make_move(valid_move)
 
-                    if king_piece.is_check(self.board, kings_location):
+                    new_kings_location = self.get_kings_location()
+
+                    if king_piece.is_check(self.board, new_kings_location):
                         valid_moves.remove(valid_move)
+
+                    new_kings_location = kings_location
+                    new_kings_piece = king_piece
 
                     # undo move
                     self.undo_move()
@@ -197,15 +207,15 @@ class GameState:
                             valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col + 1), board=self.board,
                                                     is_enpassant_move=True))
 
-                        if (row + 1, col - 1) == self.enpassant_coord and self.board[row + 1][col + 1].is_white != self.white_to_move:
+                        if (row + 1, col - 1) == self.enpassant_coord and self.board[row + 1][col - 1].is_white != self.white_to_move:
                             valid_moves.append(Move(start_sq=(row, col), end_sq=(row + 1, col - 1), board=self.board,
                                                     is_enpassant_move=True))
 
-                        if (row - 1, col + 1) == self.enpassant_coord and self.board[row + 1][col + 1].is_white != self.white_to_move:
+                        if (row - 1, col + 1) == self.enpassant_coord and self.board[row - 1][col + 1].is_white != self.white_to_move:
                             valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col + 1), board=self.board,
                                                     is_enpassant_move=True))
 
-                        if (row - 1, col - 1) == self.enpassant_coord and self.board[row + 1][col + 1].is_white != self.white_to_move:
+                        if (row - 1, col - 1) == self.enpassant_coord and self.board[row - 1][col - 1].is_white != self.white_to_move:
                             valid_moves.append(Move(start_sq=(row, col), end_sq=(row - 1, col - 1), board=self.board,
                                                     is_enpassant_move=True))
 
