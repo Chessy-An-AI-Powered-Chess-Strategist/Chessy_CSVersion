@@ -89,7 +89,7 @@ class GameState:
                 self.board[rook_location[0]][rook_location[1]] = Void()
 
         # check for checkmate
-        self.get_valid_moves_advanced()
+        # self.get_valid_moves_advanced()
 
     def undo_move(self):
         if len(self.move_log) == 0:

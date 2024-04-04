@@ -4,6 +4,7 @@ import copy
 import networkx as nx
 from plotly.graph_objs import Scatter, Figure
 
+from .settings import tree_settings
 from logic import Move, GameState
 from .board_algorithm import board_evaluation
 import random
@@ -50,7 +51,7 @@ class MoveFinderTree:
 
             all_possible_moves = game_state.get_valid_moves_advanced()
 
-            sampled_moves = random.sample(all_possible_moves, min(5, len(all_possible_moves)))
+            sampled_moves = random.sample(all_possible_moves, min(tree_settings['SAMPLE_SIZE'], len(all_possible_moves)))
 
             for next_possible_move in sampled_moves:
                 self.next_valid_moves.append(MoveFinderTree(game_state, next_possible_move))
